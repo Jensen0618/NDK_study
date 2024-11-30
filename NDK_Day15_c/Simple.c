@@ -29,6 +29,8 @@ void main() {
 	pFun2 p3 = glFun(5);
 }
 
+
+//在native中实现排序方法
 JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_sort
 (JNIEnv* env, jclass jclz, jintArray jarr) {
 	//jintArray是java中的数据类型，c不能直接操作，需要转换成c中的数据类型
@@ -64,9 +66,15 @@ JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_localRef
 (JNIEnv* env, jclass jclz) {
 	jclass jclz_string = (*env)->FindClass(env, "java/lang/String");
 	jmethodID jmid = (*env)->GetMethodID(env, jclz_string, "<init>", "()V");
-	jobject jobj=(*env)->NewObject(env, jclz_string,jmid);
+	//调用String的构造方法
+	jobject jobj = (*env)->NewObject(env, jclz_string, jmid);
 
+	//假设还有100行代码，需要用到上面构造的java对象
+
+	//不再使用的对象需要手动回收
 	(*env)->DeleteLocalRef(env, jobj);
+
+	//删除了就不能再使用了，c和c++都需要自己释放内存（静态开辟的不需要，动态malloc的需要）
 }
 
 jstring globalStr;
@@ -78,7 +86,7 @@ JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_createGlobalRef
 }
 
 JNIEXPORT jstring JNICALL Java_com_jensen_day15_Simple_getGlobalRef
-(JNIEnv* env, jclass jclz){
+(JNIEnv* env, jclass jclz) {
 	return globalStr;
 }
 
@@ -86,4 +94,73 @@ JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_delGlobalRef
 (JNIEnv* env, jclass jclz) {
 	//释放全局引用
 	(*env)->DeleteGlobalRef(env, globalStr);
+}
+
+
+//设置Simple类中name的值
+JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_staticLocalCache
+(JNIEnv* env, jclass jclz, jstring jstr) {
+	//使用static修饰，反复调用该方法，只会初始化一次
+	static jfieldID j_fieldID = NULL;
+	if (j_fieldID == NULL)
+	{
+		j_fieldID = (*env)->GetStaticFieldID(env, jclz, "name", "Ljava/lang/String;");
+	}
+	else {
+		//native中的输出和java不是一个频道的，总是要java都输出完才开始
+		printf("j_fieldID not Null\n");
+	}
+	//修改静态变量的值
+	(*env)->SetStaticObjectField(env, jclz, j_fieldID, jstr);
+}
+
+//全局静态，一般会放到初始化函数里去做
+
+
+//native处理java异常
+JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_nativeException
+(JNIEnv* env, jclass jclz) {
+	jfieldID j_fieldID = (*env)->GetStaticFieldID(env, jclz, "name2", "Ljava/lang/String;");
+	jthrowable j_throwable = (*env)->ExceptionOccurred(env);//有这句java就能有异常信息
+	if (j_throwable)
+	{
+		(*env)->ExceptionClear(env);//清除异常，不抛了
+		printf("can't find name2");
+		j_fieldID = (*env)->GetStaticFieldID(env, jclz, "name", "Ljava/lang/String;");
+		//手动抛异常
+		jclass j_e = (*env)->FindClass(env, "java/lang/NoSuchFieldException");
+		(*env)->ThrowNew(env, j_e, "cant' find name2");
+		return;//抛完异常要return，不然又往下走了
+
+	}
+	jstring jstr = (*env)->NewStringUTF(env, "ABC");
+	(*env)->SetStaticObjectField(env, jclz, j_fieldID, jstr);
+
+
+}
+
+//常量指针 const写在最前面，是指针，可以操作指针，不能操作变量
+void test2(const char* str) {
+	str++;
+	*str = "123";
+
+	int a = 100;
+	const int* p = &a;
+
+	p++;
+	*p = 200;
+
+}
+
+//指针常量，const修饰str，不能操作指针，可以操作变量
+void test1(char* const str) {
+	str++;
+	*str = "123";
+
+	int a = 100;
+	int* const p = &a;
+
+	p++;
+	*p = 200;
+
 }

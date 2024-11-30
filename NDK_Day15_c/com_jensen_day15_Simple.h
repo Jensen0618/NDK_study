@@ -27,6 +27,13 @@ JNIEXPORT jstring JNICALL Java_com_jensen_day15_Simple_getGlobalRef
 JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_delGlobalRef
 (JNIEnv*, jclass);
 
+JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_staticLocalCache
+(JNIEnv*, jclass,jstring);
+
+JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_nativeException
+(JNIEnv*, jclass);
+
+
 
 #ifdef __cplusplus
 }
