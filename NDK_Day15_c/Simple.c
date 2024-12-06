@@ -19,15 +19,15 @@ typedef char (*pFun2)(int);
 
 pFun2 p2;
 
-void main() {
-	pFun = glFun;
-	pFun(2);
-	(*pFun)(2);
-
-	p2 = glFun;
-	p2(5);
-	pFun2 p3 = glFun(5);
-}
+//void main() {
+//	pFun = glFun;
+//	pFun(2);
+//	(*pFun)(2);
+//
+//	p2 = glFun;
+//	p2(5);
+//	pFun2 p3 = glFun(5);
+//}
 
 
 //在native中实现排序方法
@@ -139,28 +139,52 @@ JNIEXPORT void JNICALL Java_com_jensen_day15_Simple_nativeException
 
 }
 
-//常量指针 const写在最前面，是指针，可以操作指针，不能操作变量
+//常量指针 char是指针类型，const修饰*str，str可以变，*str不可变
 void test2(const char* str) {
 	str++;
-	*str = "123";
+	//*str = "123";//报错
 
 	int a = 100;
 	const int* p = &a;
 
 	p++;
-	*p = 200;
+	//*p = 200;//报错
 
 }
 
-//指针常量，const修饰str，不能操作指针，可以操作变量
+//指针常量，const修饰str，str不能变，*str可以变
+//这种就是为了防止操作指针
 void test1(char* const str) {
-	str++;
+	//str++;//报错
 	*str = "123";
 
 	int a = 100;
 	int* const p = &a;
 
-	p++;
+	//p++;//报错
 	*p = 200;
+
+}
+
+void main() {
+	int a = 200;
+	int b = 300;
+	int* const num1 = &a;
+
+	*num1 = 200;
+
+	//num1 = &b;//指针常量，不能操作指针
+	//我就是想这么改怎么办呢？
+	int* num2 = &num1;
+
+	num2 = 300;
+
+	printf("num1=%d\n", *num1);
+	printf("num2=%d\n", *num2);
+
+
+
+
+	getchar();
 
 }

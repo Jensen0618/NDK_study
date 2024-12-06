@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{5a4f72c4-a35b-44c8-a8e8-fa960f8e8d80}</ProjectGuid>
-    <RootNamespace>NDKDay15c</RootNamespace>
+    <ProjectGuid>{9c0be7f1-1f2c-494a-b1ba-ebcce8615f1f}</ProjectGuid>
+    <RootNamespace>NDKDay22c</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,12 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Simple.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="com_jensen_day15_Simple.h" />
-    <ClInclude Include="jni.h" />
-    <ClInclude Include="jni_md.h" />
+    <ClCompile Include="Simple.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
