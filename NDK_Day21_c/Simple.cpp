@@ -51,6 +51,7 @@ Student::~Student() {
 	cout << "调用了析构函数" << endl;
 }
 
+//拷贝构造函数，一种特殊的构造函数，由编译器自主调用；如果在构造函数中动态申请内存，务必在这里实现深度复制
 Student::Student(const Student& std) {
 
 }
