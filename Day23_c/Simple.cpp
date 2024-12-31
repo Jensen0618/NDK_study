@@ -140,12 +140,13 @@ public:
 
 	//拷贝构造函数
 	Array(const Array& arr) {
+		//不写this也是完全没问题的，写上比较清晰而已
 		size = arr.size;
 		//深度拷贝
 		array = (int*)malloc(sizeof(int) * size);
-		for (int i=0;i<this->size;i++)
+		for (int i = 0; i < this->size; i++)
 		{
-			this->array[i] = arr.array[i];
+			array[i] = arr.array[i];
 		}
 	}
 
@@ -198,7 +199,7 @@ void printArray(Array arr) {
 	}
 }
 
-
+/*
 void main() {
 	Array* array = new Array(3);
 
@@ -212,4 +213,84 @@ void main() {
 
 	getchar();
 }
+*/
 
+
+//类的继承
+
+//基类
+class Person
+{
+public:
+	Person(char* name, int age) {
+		this->name = name;
+		this->age = age;
+		cout << "Person 构造函数" << endl;
+	}
+
+	~Person() {}
+
+	void print() {
+		cout << this->name << "," << this->age << endl;
+	}
+
+
+private:
+	char* name;
+	int age;
+};
+
+
+//子类
+			   //类继承修饰符
+class Student :public Person {
+private:
+	Teacher teacher;
+public:
+	Student(char* name, int age) :Person(name, age), teacher("Jensen", 50,"语文") {//类Teacher不存在默认构造函数
+		cout << "Student 构造函数" << endl;
+	}
+};
+
+
+//初始化对象
+class Teacher :public Person {
+
+private:
+	//char* course;
+	Course course;
+public:
+	//Java中一般把成员变量放在构造函数内部初始化
+	//C++一般是像下面这样写
+	Teacher(char* name, int age, char* course) :Person(name, age),course(course) {
+		cout << "Teacher 构造函数:" << name << "," << age << endl;
+	}
+};
+
+class Course
+{
+private:
+	char* name;
+public:
+	Course(char* courseName) {
+		this->name = courseName;
+	}
+
+private:
+
+};
+
+
+
+
+void main() {
+	//Person p1("Jensen", 20);
+
+	Student s1("Jensen", 20);
+
+	s1.print();//需要在继承的父类前加上public修饰符才能调用父类提供的方法
+
+	Teacher t1("lily", 20, "语文");
+
+	getchar();
+}
