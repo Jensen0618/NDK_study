@@ -262,6 +262,7 @@ private:
 public:
 	//Java中一般把成员变量放在构造函数内部初始化
 	//C++一般是像下面这样写
+	//course报错可能是没有保存
 	Teacher(char* name, int age, char* course) :Person(name, age),course(course) {
 		cout << "Teacher 构造函数:" << name << "," << age << endl;
 	}
