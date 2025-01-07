@@ -15,6 +15,7 @@ public:
 };
 
 //子类不是模板类
+
 class IntCallback :public Callback<int> {
 public:
 	void onSuccess(int result) {
