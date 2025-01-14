@@ -4,8 +4,12 @@
 #include <vector>
 using namespace std;
 
-void main(){
+int main(){
 	vector<int> v = { 1,2,3,4,5,6 };
 
 
+	int count = count_if(v.begin(),v.end(),)
+
+	getchar();
+	return 0;
 }
