@@ -39,35 +39,6 @@ void bitmap2Mat(JNIEnv *pEnv, Mat &mat, jobject &bitmap) {
 
 }
 
-
-extern "C"
-JNIEXPORT jint JNICALL
-Java_com_ndk_day05_FaceUtil_dectFace(JNIEnv *env, jobject thiz, jobject bitmap) {
-    //检测人脸，opencv有一个非常关键的类是Mat
-    //opencv是C喝C++写的，只会处理Mat，android里是bitmap
-    //1. Bitmap转成opencv能够操作的C++对象Mat，Mat是一个矩阵
-    Mat mat;
-    bitmap2Mat(env, mat, bitmap);
-
-    //处理灰度 opencv处理灰度图，提高效率，一般所有操作都对对其进行灰度处理
-    Mat gray_mat;
-    cvtColor(mat, gray_mat, COLOR_BGRA2GRAY);
-
-//    再次处理 直方均衡补偿
-    Mat equalize_mat;
-    equalizeHist(gray_mat, equalize_mat);
-
-//    识别人脸
-
-
-
-    //把mat放回bitmap
-    mat2Bitmap(env, equalize_mat, bitmap);
-
-    //保存人脸信息
-    return 0;
-}
-
 void mat2Bitmap(JNIEnv *env, Mat &mat, jobject &bitmap) {
     //Mat里面有个type：CV_8UC4 对应Bitmap中的ARGB_8888，CV_8UC2对应Bitmap中的RGB_565
     //获取bitmap信息
@@ -104,3 +75,34 @@ void mat2Bitmap(JNIEnv *env, Mat &mat, jobject &bitmap) {
     AndroidBitmap_unlockPixels(env, bitmap);
 
 }
+
+
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_ndk_day05_FaceUtil_dectFace(JNIEnv *env, jobject thiz, jobject bitmap) {
+    //检测人脸，opencv有一个非常关键的类是Mat
+    //opencv是C喝C++写的，只会处理Mat，android里是bitmap
+    //1. Bitmap转成opencv能够操作的C++对象Mat，Mat是一个矩阵
+    Mat mat;
+    bitmap2Mat(env, mat, bitmap);
+
+    //处理灰度 opencv处理灰度图，提高效率，一般所有操作都对对其进行灰度处理
+    Mat gray_mat;
+    cvtColor(mat, gray_mat, COLOR_BGRA2GRAY);
+
+//    再次处理 直方均衡补偿
+    Mat equalize_mat;
+    equalizeHist(gray_mat, equalize_mat);
+
+//    识别人脸
+
+
+
+    //把mat放回bitmap
+    mat2Bitmap(env, equalize_mat, bitmap);
+
+    //保存人脸信息
+    return 0;
+}
+

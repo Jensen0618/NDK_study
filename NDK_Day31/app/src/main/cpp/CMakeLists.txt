@@ -21,7 +21,9 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        native-lib.cpp)
+        native-lib.cpp
+        BitmapMatUtils.cpp
+        cardocr.cpp)
 
 #opencv
 #指定头文件搜索路径，以当前CMakeLists.txt文件的目录为起点
