@@ -36,13 +36,12 @@ Java_com_ndk_day31_BankCardOcr_cardOcr(JNIEnv *env, jclass clazz, jobject bitmap
 //对过滤到的银行卡区域进行裁剪
     Mat card_mat(mat, rect);//裁剪后的Mat
     imwrite("/storage/emulated/0/card_mat.jpg", card_mat);
-
+//查找银行卡卡号区域
     Rect card_number_rect;
     co1::find_card_number_area(card_mat, card_number_rect);
-
     Mat card_number_mat(card_mat,card_number_rect);
     imwrite("/storage/emulated/0/card_number_mat.jpg", card_number_mat);
-
+//一个个卡号数字找出来保存在列表里
     vector<Mat> numbers;
     co1::find_card_numbers(card_number_mat, numbers);
 

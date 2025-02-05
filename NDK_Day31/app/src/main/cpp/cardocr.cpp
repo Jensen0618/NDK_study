@@ -4,6 +4,15 @@
 
 #include "cardocr.h"
 #include <vector>
+#include <android/log.h>
+
+#define TAG "cardocr"
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,TAG ,__VA_ARGS__)    // 定义LOGD类型
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,TAG ,__VA_ARGS__)        // 定义LOGI类型
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,TAG ,__VA_ARGS__)        // 定义LOGW类型
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,TAG ,__VA_ARGS__)    // 定义LOGE类型
+#define LOGF(...) __android_log_print(ANDROID_LOG_FATAL,TAG ,__VA_ARGS__)    // 定义LOGF类型
+
 
 using namespace std;
 
@@ -47,7 +56,7 @@ int co1::find_card_area(const Mat &mat, Rect &area) {
 
     vector<vector<Point>> contours;
     //获取轮廓
-    findContours(binary, contours, RETR_EXTERNAL,CHAIN_APPROX_SIMPLE);
+    findContours(binary, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i) {
         Rect rect = boundingRect(contours[i]);
         //过滤轮廓
@@ -83,10 +92,10 @@ int co1::find_card_number_area(const Mat &mat, Rect &area) {
 //    两种方式，一种是精确截取，找到右下角银联区域通过大小比例精确的截取
 //粗略的截图，截取高度1/2~3/4，宽度1/12~11/12
 //万一找不到，可以手动输入和修改
-    area.x=mat.cols/12;
-    area.y=mat.rows/2;
+    area.x = mat.cols / 12;
+    area.y = mat.rows / 2;
     area.width = mat.cols * 5 / 6;
-    area.height=mat.rows/4;
+    area.height = mat.rows / 4;
 
     return 0;
 }
@@ -102,6 +111,10 @@ int co1::find_card_numbers(const Mat &mat, std::vector<Mat> &numbers) {
     threshold(gray, binary, 39, 255, THRESH_BINARY);
     imwrite("/storage/emulated/0/binary.jpg", binary);
 
+    //降噪过滤
+    Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3));
+    morphologyEx(binary, binary, MORPH_CLOSE, kernel);
+
     //去掉干扰，找数字就是轮廓查询
     //查找轮廓 白色轮廓才能找到，需要把图片取反（黑色背景，白色轮廓）
     //取反 白黑->黑白
@@ -109,18 +122,29 @@ int co1::find_card_numbers(const Mat &mat, std::vector<Mat> &numbers) {
     bitwise_not(binary_not, binary_not);
     imwrite("/storage/emulated/0/binary_not.jpg", binary_not);
 
+
     vector<vector<Point>> contours;
+    //总面积
+    int mat_area = mat.rows * mat.cols;
+    //数字高度
+    int h = mat.rows / 3;
     //获取轮廓
-    findContours(binary, contours, RETR_EXTERNAL,CHAIN_APPROX_SIMPLE);
+    findContours(binary, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
     for (int i = 0; i < contours.size(); ++i) {
         Rect rect = boundingRect(contours[i]);
-        //过滤轮廓
-        if (rect.width > mat.cols / 2 && rect.width != mat.cols && rect.height > mat.rows / 2) {
-            //银行卡区域的宽高必须大于图片的一半
+        int rect_area = rect.width * rect.height;
+        if (rect_area < mat_area / 100) {
+            LOGD("过滤小面积色块W=%d,H=%d", rect.width, rect.height);
+            //色块填充为白色
+            drawContours(binary, contours, i, Scalar(255),-1);
+        } else if (rect.height < h) {
+            LOGD("过滤高度不足色块W=%d,H=%d", rect.width, rect.height);
+            drawContours(binary, contours, i, Scalar(255),-1);
 
-            break;
         }
     }
+
+    imwrite("/storage/emulated/0/binary_not_noise.jpg", binary);
 
 
     gray.release();
