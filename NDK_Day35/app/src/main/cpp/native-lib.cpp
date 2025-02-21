@@ -126,7 +126,7 @@ void bubbleSort3(int *arr, int len) {
     int left = 0;
     int right = len - 1;
     //记录最后交换位置
-    int lastSwapIndex=0;
+    int lastSwapIndex = 0;
     while (left < right) {
         bool isSorted = true;
 //        从左往右循环一次
@@ -143,7 +143,7 @@ void bubbleSort3(int *arr, int len) {
         right = lastSwapIndex;
         //从右往左循环一次，把最小的移动到最左边
         isSorted = true;
-        for (int i = right; i >left; i--) {
+        for (int i = right; i > left; i--) {
             if (arr[i] < arr[i - 1]) {
                 swap(arr[i], arr[i - 1]);
                 isSorted = false;
@@ -180,6 +180,76 @@ void selectSort(int *arr, int len) {
     }
 }
 
+/*
+ * 插入排序-基础版
+ * 外层大循环遍历len-1遍，5个数遍历4遍，从第2个数开始
+ * 内层循环从第arr[i]开始，依次和前一个数比较大小，若小则交换位置，否则跳出
+ * 一遍循环下来，i之前的都是有序区，若不需要交换就表示这个i已经有序了
+ */
+void insertSort(int *arr, int len) {
+    for (int i = 1; i < len; ++i) {
+        for (int j = i; j > 0; --j) {
+            if (arr[j] < arr[j - 1]) {
+                swap(arr[j], arr[j - 1]);
+            } else {
+                break;
+            }
+        }
+    }
+}
+
+/*
+ * 插入排序-优化版
+ * 外层大循环遍历len-1遍，5个数遍历4遍，从第2个数开始
+ * 内层循环从第arr[i]开始，和前一个数比较大小，若小则交换位置，否则跳出
+ * 一遍循环下来，i之前的都是有序区，若不需要交换就表示这个i已经有序了
+ *
+ * 插入排序的精髓，将要比较的元素存起来
+ * 将序列前的元素和tmp比较，如果大于tmp则元素后移（赋值），跳出循环时，将存起来的值插到上个索引
+ * 很像打牌整理手牌的情况
+ */
+void insertSort1(int *arr, int len) {
+    int j;//将要插的位置
+    //从第二个数开始，第一个数当作有序区域
+    for (int i = 1; i < len; ++i) {
+        int tmp = arr[i];//把要插的牌存起来
+        //arr[i]<arr[i-1] 和前面的数做比较
+        for (j = i; j > 0 && tmp < arr[j - 1]; --j) {
+//            swap(arr[j], arr[j - 1]);//交换要用到3次赋值，不用它
+            arr[j] = arr[j - 1];
+        }
+        arr[j] = tmp;
+    }
+}
+
+/**
+ * 希尔排序
+ * 1 2 3 4 5 6 7 8 9
+ */
+void shellSort(int *arr, int len) {
+    //步长
+    int delta = len / 2;
+    int j;//插排位置
+    while (delta >= 1) {
+        //分组
+        for (int k = 0; k < len; k += delta) {
+            //1 6，2 7，3 8，4 9，5
+            //每个小组做插入排序
+            for (int i = k + delta; i < len; i += delta) {
+                int tmp = arr[i];//把要插的牌存起来
+                //arr[i]<arr[i-1] 和前面的数做比较
+                for (j = i; j > 0 && tmp < arr[j - delta]; j -= delta) {
+                    arr[j] = arr[j - delta];
+                }
+                arr[j] = tmp;
+            }
+        }
+        delta = delta / 2;
+    }
+
+}
+
+
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_ndk_day35_MainActivity_stringFromJNI(
         JNIEnv *env,
@@ -187,17 +257,24 @@ Java_com_ndk_day35_MainActivity_stringFromJNI(
 
 //    int arr[4] = {9, 5, 3, 2};
 
-    int len = 10000;
+    int len = 20000;
+//    int len = 10;
     int *arr = ArrayUtil::generateRandArray(len, 20, 100);
 //复制一份同样的数组
     int *arr2 = new int[len];
     int *arr3 = new int[len];
     int *arr4 = new int[len];
     int *arr5 = new int[len];
+    int *arr6 = new int[len];
+    int *arr7 = new int[len];
+    int *arr8 = new int[len];
     memcpy(arr2, arr, len * sizeof(int));
     memcpy(arr3, arr, len * sizeof(int));
     memcpy(arr4, arr, len * sizeof(int));
     memcpy(arr5, arr, len * sizeof(int));
+    memcpy(arr6, arr, len * sizeof(int));
+    memcpy(arr7, arr, len * sizeof(int));
+    memcpy(arr8, arr, len * sizeof(int));
 
 //    printArray(arr, len);
 //    printArray(arr2, len);
@@ -210,14 +287,16 @@ Java_com_ndk_day35_MainActivity_stringFromJNI(
 
 //    bubbleSort(arr, len);
 
-    testSortTime("bubbleSort", bubbleSort, arr, len);
+//    testSortTime("bubbleSort", bubbleSort, arr, len);
     testSortTime("selectSort", selectSort, arr2, len);
-    testSortTime("bubbleSort1优化外层循环", bubbleSort1, arr3, len);
-    testSortTime("bubbleSort2优化内存循环边界", bubbleSort2, arr4, len);
-    testSortTime("bubbleSort3鸡尾酒", bubbleSort3, arr5, len);
-
+//    testSortTime("bubbleSort1优化外层循环", bubbleSort1, arr3, len);
+//    testSortTime("bubbleSort2优化内存循环边界", bubbleSort2, arr4, len);
+//    testSortTime("bubbleSort3鸡尾酒", bubbleSort3, arr5, len);
+//    testSortTime("insertSort基础版", insertSort, arr6, len);
+    testSortTime("insertSort1优化版", insertSort1, arr7, len);
+    testSortTime("shellSort", shellSort, arr8, len);
 //    int arr0[4] = {9, 5, 3, 2};
-//    bubbleSort2(arr0, 4);
+//    shellSort(arr0, 4);
 //    printArray(arr0, 4);
 
 
@@ -230,10 +309,18 @@ Java_com_ndk_day35_MainActivity_stringFromJNI(
     delete[] arr2;
     delete[] arr3;
     delete[] arr4;
+    delete[] arr5;
+    delete[] arr6;
+    delete[] arr7;
+    delete[] arr8;
     arr = NULL;
     arr2 = NULL;
     arr3 = NULL;
     arr4 = NULL;
+    arr5 = NULL;
+    arr6 = NULL;
+    arr7 = NULL;
+    arr8 = NULL;
 
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
