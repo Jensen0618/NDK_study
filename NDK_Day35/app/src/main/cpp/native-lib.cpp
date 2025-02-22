@@ -227,26 +227,68 @@ void insertSort1(int *arr, int len) {
  * 1 2 3 4 5 6 7 8 9
  */
 void shellSort(int *arr, int len) {
-    //步长
+//    printArray(arr, len);
+//    LOGD("-------------");
+    //步长，分成几组
     int delta = len / 2;
+    int group;//第几组
     int j;//插排位置
-    while (delta >= 1) {
-        //分组
-        for (int k = 0; k < len; k += delta) {
+    int i;//每个小组的索引
+    int tmp;
+    while (delta >= 1) {//最终delta的结局一定是2/2=1.1/2=0
+        //分组，
+        for (group = 0; group < delta; group++) {
             //1 6，2 7，3 8，4 9，5
             //每个小组做插入排序
-            for (int i = k + delta; i < len; i += delta) {
-                int tmp = arr[i];//把要插的牌存起来
+            for (i = group + delta; i < len; i += delta) {
+                tmp = arr[i];//把要插的牌存起来
                 //arr[i]<arr[i-1] 和前面的数做比较
-                for (j = i; j > 0 && tmp < arr[j - delta]; j -= delta) {
+                for (j = i; j > group && tmp < arr[j - delta]; j -= delta) {
                     arr[j] = arr[j - delta];
                 }
                 arr[j] = tmp;
+//                LOGD("delta=%d,group=%d,i=%d,j=%d,tmp=%d", delta, group, i, j, tmp);
             }
         }
         delta = delta / 2;
+//        printArray(arr, len);
+//        LOGD("-----------");
     }
 
+}
+
+void shellSort1(int *A, int n) {
+    int d, i, j, temp;//d：步长
+    for (d = n / 2; d >= 1; d = d / 2) {
+        for (i = d; i < n; i++) {//增量为i++，即各个子表交错处理
+            if (A[i] < A[i - d]) {
+                temp = A[i];
+                for (j = i - d; j >= 0 && temp < A[j]; j -= d) {
+                    A[j + d] = A[j];
+                }
+                A[j + d] = temp;
+            }
+        }
+    }
+//    printArray(A, n);
+}
+
+void ShellSort2(int *A, int n) {
+    int i, j, k, d, temp;
+    for (d = n / 2; d >= 1; d = d / 2) {//将数组分割为多个子表
+        for (i = 0; i < d; i++) {//依次处理子表
+            for (j = i + d; j < n; j = j + d) {//按间隔处理子表
+                temp = A[j];
+                k = j - d;
+                while (k >= 0 && A[k] > temp) {
+                    A[k + d] = A[k];
+                    k = k - d;
+                }
+                A[k + d] = temp;
+            }
+        }
+    }
+//    printArray(A, n);
 }
 
 
@@ -294,7 +336,9 @@ Java_com_ndk_day35_MainActivity_stringFromJNI(
 //    testSortTime("bubbleSort3鸡尾酒", bubbleSort3, arr5, len);
 //    testSortTime("insertSort基础版", insertSort, arr6, len);
     testSortTime("insertSort1优化版", insertSort1, arr7, len);
-    testSortTime("shellSort", shellSort, arr8, len);
+    testSortTime("shellSort0", shellSort, arr5, len);
+    testSortTime("shellSort1", shellSort1, arr8, len);
+    testSortTime("shellSort2", ShellSort2, arr6, len);
 //    int arr0[4] = {9, 5, 3, 2};
 //    shellSort(arr0, 4);
 //    printArray(arr0, 4);
