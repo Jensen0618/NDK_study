@@ -37,11 +37,16 @@ class L1_1_PointRenderer(private val mContext: Context) : Renderer {
                     gl_PointSize = 40.0;
                 }
         """
+
         /**
          * 片段着色器
+         * 显式声明: OpenGL ES 规范要求在片段着色器中为浮点类型声明一个默认精度，
+         * 或者为每个浮点变量单独指定精度。 如果没有默认精度声明， 并且某个浮点变量没有单独指定精度， 着色器可能无法编译。
+         * 代码中的含义: precision mediump float; 这行代码告诉 GLSL 编译器，在此之后的片段着色器代码中，
+         * 任何未明确指定精度的 float 类型变量（包括 vec2, vec3, vec4, mat2, mat3, mat4 等基于浮点数的类型）都应该使用中等精度 (mediump)。
          */
         private val FRAGMENT_SHADER = """
-                // 定义所有浮点数据类型的默认精度；有lowp、mediump、highp 三种，但只有部分硬件支持片段着色器使用highp。(顶点着色器默认highp)
+                // precision关键字用于定义后续浮点数据类型的默认精度；有lowp、mediump、highp 三种，但只有部分硬件支持片段着色器使用highp。(顶点着色器默认highp)
                 precision mediump float;
                 uniform vec4 u_Color;
                 void main()
@@ -50,18 +55,25 @@ class L1_1_PointRenderer(private val mContext: Context) : Renderer {
                    gl_FragColor = u_Color;
                 }
         """
+
+        //对应着着色器中定义的变量
         private val U_COLOR = "u_Color"
         private val A_POSITION = "a_Position"
+
         /**
          * 顶点数据数组
          */
         private val POINT_DATA = floatArrayOf(
-                // 点的x,y坐标（x，y各占1个分量）
-                0f, 0f)
+            // 点的x,y坐标（x，y各占1个分量）
+            0f, 0f,
+            1f, 0.5f
+        )
+
         /**
          * 每个顶点数据关联的分量个数：当前案例只有x、y，故为2
          */
         private val POSITION_COMPONENT_COUNT = 2
+
         /**
          * Float类型占4Byte
          */
@@ -69,14 +81,17 @@ class L1_1_PointRenderer(private val mContext: Context) : Renderer {
     }
 
     private var mProgram: Int = 0
+
     /**
      * 顶点坐标数据缓冲区
      */
     private val mVertexData: FloatBuffer
+
     /**
      * 颜色uniform在OpenGL程序中的索引
      */
     private var uColorLocation: Int = 0
+
     /**
      * 顶点坐标在OpenGL程序中的索引
      */
@@ -85,12 +100,12 @@ class L1_1_PointRenderer(private val mContext: Context) : Renderer {
     init {
         // 分配一个块Native内存，用于与GL通讯传递。(我们通常用的数据存在于Dalvik的内存中，1.无法访问硬件；2.会被垃圾回收)
         mVertexData = ByteBuffer
-                // 分配顶点坐标分量个数 * Float占的Byte位数
-                .allocateDirect(POINT_DATA.size * BYTES_PER_FLOAT)
-                // 按照本地字节序排序
-                .order(ByteOrder.nativeOrder())
-                // Byte类型转Float类型
-                .asFloatBuffer()
+            // 分配顶点坐标分量个数 * Float占的Byte位数
+            .allocateDirect(POINT_DATA.size * BYTES_PER_FLOAT)
+            // 按照本地字节序排序
+            .order(ByteOrder.nativeOrder())
+            // Byte类型转Float类型
+            .asFloatBuffer()
 
         // 将Dalvik的内存数据复制到Native内存中
         mVertexData.put(POINT_DATA)
@@ -123,15 +138,17 @@ class L1_1_PointRenderer(private val mContext: Context) : Renderer {
 
         // 将缓冲区的指针移动到头部，保证数据是从最开始处读取
         mVertexData.position(0)
-        // 步骤7：关联顶点坐标属性和缓存数据
+        // 步骤7：关联顶点坐标属性（通过坐标索引aPositionLocation）和缓存数据（mVertexData，mVertexData在init方法中完成数据添加）
         // 1. 位置索引；
         // 2. 每个顶点属性需要关联的分量个数(必须为1、2、3或者4。初始值为4。)；
         // 3. 数据类型；
         // 4. 指定当被访问时，固定点数据值是否应该被归一化(GL_TRUE)或者直接转换为固定点值(GL_FALSE)(只有使用整数数据时)
         // 5. 指定连续顶点属性之间的偏移量。如果为0，那么顶点属性会被理解为：它们是紧密排列在一起的。初始值为0。
         // 6. 数据缓冲区
-        GLES20.glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT, GLES20.GL_FLOAT,
-                false, 0, mVertexData)
+        GLES20.glVertexAttribPointer(
+            aPositionLocation, POSITION_COMPONENT_COUNT, GLES20.GL_FLOAT,
+            false, 0, mVertexData
+        )
 
         // 步骤8：通知GL程序使用指定的顶点属性索引
         GLES20.glEnableVertexAttribArray(aPositionLocation)
@@ -146,9 +163,9 @@ class L1_1_PointRenderer(private val mContext: Context) : Renderer {
         // 步骤1：使用glClearColor设置的颜色，刷新Surface
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
-        // 步骤2：更新u_Color的值，即更新画笔颜色
+        // 步骤2：更新u_Color的值，即更新画笔颜色；用的是索引为u_Color的uniform变量；
         GLES20.glUniform4f(uColorLocation, 0.0f, 0.0f, 1.0f, 1.0f)
-        // 步骤3：使用数组绘制图形：1.绘制的图形类型；2.从顶点数组读取的起点；3.从顶点数组读取的顶点个数
-        GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 1)
+        // 步骤3：使用数组绘制图形：1.绘制的图形类型；2.从顶点数组读取的起点；3.从顶点数组读取的顶点个数（数组长达/分量个数）
+        GLES20.glDrawArrays(GLES20.GL_POINTS, 0, POINT_DATA.size / POSITION_COMPONENT_COUNT)
     }
 }
