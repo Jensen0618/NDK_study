@@ -226,10 +226,12 @@ void LinkedList<E>::linkLast(E e) {
     Node<E> *new_node = new Node<E>(e, last, NULL);
 
     if (head) {
+        //last地址指向的对象的next属性指向new_node，这里是修改了last指向的对象，last只是个地址
         last->next = new_node;
     } else {
         head = new_node;
     }
+    //将last指向另一个对象地址，改的是地址，不是对象
     last = new_node;
     len++;
 

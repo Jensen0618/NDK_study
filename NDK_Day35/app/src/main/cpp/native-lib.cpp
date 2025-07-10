@@ -291,6 +291,154 @@ void ShellSort2(int *A, int n) {
 //    printArray(A, n);
 }
 
+void _merge(int *arr, int left, int mid, int right) {
+    //需要操作arr，复制一个临时数组，数组长度等于右减左+1
+    int len = right - left + 1;
+    int temp[len];
+
+    //左边数组的索引
+    int i = left;
+    //右边数组索引
+    int j = mid + 1;
+    //临时数组索引
+    int k = 0;
+    //规定左边数组和右边数组的边界
+    while (i <= mid && j <= right) {
+        //比较左右哪边的小，小的放到临时数组里
+//        if (arr[i] < arr[j]) {
+//            temp[k++] = arr[i++];
+//        } else {
+//            temp[k++] = arr[j++];
+//        }
+        temp[k++] = arr[i] < arr[j] ? arr[i++] : arr[j++];
+    }
+    //判断左边的元素是否都被填入临时数组
+    while (i <= mid) {
+        temp[k++] = arr[i++];
+    }
+    //判断右边的元素是否都被填入临时数组
+    while (j <= right) {
+        temp[k++] = arr[j++];
+    }
+    //将排好序的临时数组复制到原数组
+    for (int m = left, n = 0; m <= right; m++, n++) {
+        arr[m] = temp[n];
+    }
+
+}
+
+/**
+ * 归并排序 递归
+ * 不断的分割数组直到只有两个元素，然后排序，然后不断完成分割剩下那部分的元素
+ * @param arr 数组
+ * @param left 数组索引左边界
+ * @param right 数组索引右边界
+ */
+void _mergeSort(int *arr, int left, int right) {
+    //跳出递归的标志
+    if (left >= right) {
+        return;
+    }
+    //算术运算符 >位运算符> 关系运算符 > 逻辑运算符（其中的逻辑非！运算级别很高，应排除在此外） >  赋值运算符 > 逗号运算符
+    //    右移一位，相当于除以2
+    //    int mid = (right + left) >> 1;
+    //a+(b-a)/2=2*(a+(b-a)/2)/2=(2a+(b-a))/2=a+(b-a)/2
+    int mid = left + ((right - left) >> 1); //使用这个替代(right + left) >> 1，避免证书溢出风险
+    //递归排序左边的元素
+    _mergeSort(arr, left, mid);
+    //递归排序右边的元素
+    _mergeSort(arr, mid + 1, right);
+    //排序
+    if (arr[mid] > arr[mid + 1]) {
+        _merge(arr, left, mid, right);
+    }
+}
+
+/**
+ * 归并排序
+ */
+void mergeSort(int *arr, int len) {
+    //因为要递归，所以单独写一个方法
+    _mergeSort(arr, 0, len - 1);
+}
+
+void Merge(int a[], int left, int mid, int right) {
+    int temp[right - left + 1];                   //临时数组用于存储排序时的数
+    int i = left;                                 //分成两块 i指向左边的数字 j指向右边的数字
+    int j = mid + 1;
+    int k = 0;                                    //k用于存储数字到临时数组
+
+    while (i <= mid && j <= right) {
+        if (a[i] < a[j])                          //永远都是 i 和 j 指向的数进行比较
+            temp[k++] = a[i++];                   //谁小，谁就先放到临时数组中
+        else
+            temp[k++] = a[j++];
+    }
+
+    while (i <= mid)                             //如果左边还有数没放上去，就依次放上去
+        temp[k++] = a[i++];
+    while (j <= right)                           //如果是右边还有同上
+        temp[k++] = a[j++];
+
+    for (int m = left, n = 0; m <= right; m++, n++)//读取临时数组中的数
+        a[m] = temp[n];
+}
+
+void Merge_Sort(int a[], int left, int right) {
+    if (left >= right) return;
+
+    int mid = (left + right) / 2;
+    //递归拆分成较小规模子序列排序
+    Merge_Sort(a, left, mid);
+    Merge_Sort(a, mid + 1, right);
+    if (a[mid] > a[mid + 1]) {
+        Merge(a, left, mid, right);      //合并较小规模问题解
+    }
+}
+
+void mergeSort1(int *arr, int len) {
+    //因为要递归，所以单独写一个方法
+    Merge_Sort(arr, 0, len - 1);
+}
+
+
+void _quickSort(int *arr, int low, int high) {
+    if (low >= high) return;
+    //定义两个哨兵
+    int i = low, j = high;
+    //基准数
+    int base = arr[low];
+    while (i < j) {
+        //右边的哨兵先出发，如果发现右比基准数小的数，停下
+        while (arr[j] >= base && j > i) {
+            j--;
+        }
+        //左边的哨兵后出发，如果发现比基准数大的数，停下
+        while (arr[i] <= base && i < j) {
+            i++;
+        }
+        //交换哨兵发现的两个数
+        swap(arr[i], arr[j]);
+    }
+    //交换基准数和尾哨兵
+    swap(arr[low], arr[j]);
+    _quickSort(arr, low, j - 1);
+    _quickSort(arr, j + 1, high);
+
+
+}
+
+
+/**
+ * 快速排序 基础班
+ * @param arr
+ * @param len
+ */
+void quickSort(int *arr, int len) {
+
+    _quickSort(arr, 0, len - 1);
+}
+
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_ndk_day35_MainActivity_stringFromJNI(
@@ -299,8 +447,8 @@ Java_com_ndk_day35_MainActivity_stringFromJNI(
 
 //    int arr[4] = {9, 5, 3, 2};
 
-    int len = 20000;
-//    int len = 10;
+//    int len = 20000;
+    int len = 10;
     int *arr = ArrayUtil::generateRandArray(len, 20, 100);
 //复制一份同样的数组
     int *arr2 = new int[len];
@@ -330,18 +478,21 @@ Java_com_ndk_day35_MainActivity_stringFromJNI(
 //    bubbleSort(arr, len);
 
 //    testSortTime("bubbleSort", bubbleSort, arr, len);
-    testSortTime("selectSort", selectSort, arr2, len);
+//    testSortTime("selectSort", selectSort, arr2, len);
 //    testSortTime("bubbleSort1优化外层循环", bubbleSort1, arr3, len);
 //    testSortTime("bubbleSort2优化内存循环边界", bubbleSort2, arr4, len);
 //    testSortTime("bubbleSort3鸡尾酒", bubbleSort3, arr5, len);
 //    testSortTime("insertSort基础版", insertSort, arr6, len);
-    testSortTime("insertSort1优化版", insertSort1, arr7, len);
-    testSortTime("shellSort0", shellSort, arr5, len);
-    testSortTime("shellSort1", shellSort1, arr8, len);
-    testSortTime("shellSort2", ShellSort2, arr6, len);
+//    testSortTime("insertSort1优化版", insertSort1, arr7, len);//选择和插入一个量级
+//    testSortTime("shellSort0", shellSort, arr5, len);
+//    testSortTime("shellSort1", shellSort1, arr8, len);
+//    testSortTime("shellSort2", ShellSort2, arr6, len);
+    testSortTime("mergeSort0", mergeSort, arr3, len);//希尔和归并差不多一个量级
+    testSortTime("quickSort", quickSort, arr4, len);//希尔和归并差不多一个量级
 //    int arr0[4] = {9, 5, 3, 2};
-//    shellSort(arr0, 4);
-//    printArray(arr0, 4);
+//    mergeSort(arr0, 4);
+//    Merge_Sort(arr0, 0, 3);
+    printArray(arr4, len);
 
 
 //为什么呢？
