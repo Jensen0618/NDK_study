@@ -9,29 +9,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.joyu.gldemo.renderer.L1_1_PointRenderer;
+
 public class MainActivity extends AppCompatActivity {
 
     private GLSurfaceView glSurfaceView;
-    private boolean isRendererSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         glSurfaceView = new GLSurfaceView(this);
-        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        ConfigurationInfo deviceConfigurationInfo = activityManager.getDeviceConfigurationInfo();
-        boolean supportsEs2 = deviceConfigurationInfo.reqGlEsVersion >= 0x20000;
-        if (supportsEs2) {
-            // Request an OpenGL ES 2.0 compatible context.
-            glSurfaceView.setEGLContextClientVersion(2);
-            glSurfaceView.setRenderer(new MyRenderer());
-            isRendererSet = true;
-        } else {
-            Toast.makeText(this, "This device does not support OpenGL ES 2.0.", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-
+        glSurfaceView.setEGLContextClientVersion(2);
+        L1_1_PointRenderer renderer = new L1_1_PointRenderer();
+        glSurfaceView.setRenderer(renderer);
+//        glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         setContentView(glSurfaceView);
 
     }
@@ -39,16 +30,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (isRendererSet) {
+        if (glSurfaceView!=null) {
             glSurfaceView.onResume();
         }
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
-        if (isRendererSet) {
+        if (glSurfaceView!=null) {
             glSurfaceView.onPause();
         }
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
