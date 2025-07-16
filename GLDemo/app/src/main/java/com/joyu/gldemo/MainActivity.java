@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.joyu.gldemo.renderer.L1_1_PointRenderer;
+import com.joyu.gldemo.renderer.L1_2_PointRenderer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<HomeItem> homeItems = new ArrayList<>();
         homeItems.add(new HomeItem("L1_1_基础框架", L1_1_PointRenderer.class));
+        homeItems.add(new HomeItem("L1_2_点的绘制", L1_2_PointRenderer.class));
 
         HomeAdapter adapter = new HomeAdapter(homeItems);
         adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -43,12 +46,23 @@ public class MainActivity extends AppCompatActivity {
                 glSurfaceView.setEGLConfigChooser(false);
                 Class renderClass = homeItems.get(position).renderClass;
                 try {
-                    GLSurfaceView.Renderer renderer = (GLSurfaceView.Renderer) renderClass.newInstance();
+                    GLSurfaceView.Renderer renderer = (GLSurfaceView.Renderer) renderClass.getConstructor(Context.class).newInstance(context);
                     glSurfaceView.setRenderer(renderer);
                     glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+                    glSurfaceView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            glSurfaceView.requestRender();
+                        }
+                    });
+
                 } catch (InstantiationException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
