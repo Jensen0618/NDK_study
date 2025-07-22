@@ -134,6 +134,7 @@ public class CameraManager implements ICameraManager {
                 mCameraBytes = null;
                 mDisplayOrientation = -1;
             } catch (Exception e) {
+                Log.e(TAG, "releaseCamera: ",e );
             }
             onClose();
         }
@@ -388,6 +389,7 @@ public class CameraManager implements ICameraManager {
             mCameraCallback.onOpenError(error, msg);
         }
     }
+
 
     private void onPreview(int width, int height) {
         isPreviewing = true;

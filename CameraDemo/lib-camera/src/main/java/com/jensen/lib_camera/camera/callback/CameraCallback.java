@@ -5,6 +5,11 @@ public interface CameraCallback {
 
     void onOpenError(int error, String msg);
 
+    /**
+     * 开始预览回调
+     * @param previewWidth
+     * @param previewHeight
+     */
     void onPreview(int previewWidth, int previewHeight);
 
     void onPreviewError(int error, String msg);
