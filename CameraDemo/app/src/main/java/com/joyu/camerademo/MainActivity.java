@@ -26,4 +26,8 @@ public class MainActivity extends AppCompatActivity {
     public void onGLSurfaceClick(View view) {
         startActivity(new Intent(this, GLSurfaceViewActivity.class));
     }
+
+    public void onCameraSurfaceView(View view) {
+        startActivity(new Intent(this, CameraSurfaceViewActivity.class));
+    }
 }

@@ -26,7 +26,7 @@ public class CameraManager implements ICameraManager {
     public static final int CAMERA_ERROR_PREVIEW = -2001;
     Context mContext;
     Camera mCamera;
-    int mCameraId = -1;
+    int mCameraId = 0;
     private Size mPreviewSize;
     private int mPreviewWidth = 640;
     private int mPreviewHeight = 480;
@@ -134,7 +134,7 @@ public class CameraManager implements ICameraManager {
                 mCameraBytes = null;
                 mDisplayOrientation = -1;
             } catch (Exception e) {
-                Log.e(TAG, "releaseCamera: ",e );
+                Log.e(TAG, "releaseCamera: ", e);
             }
             onClose();
         }
@@ -190,12 +190,12 @@ public class CameraManager implements ICameraManager {
 
     @Override
     public void setCameraId(int cameraId) {
-
+        mCameraId = cameraId;
     }
 
     @Override
     public int getCameraId() {
-        return 0;
+        return mCameraId;
     }
 
     @Override
@@ -205,22 +205,25 @@ public class CameraManager implements ICameraManager {
 
     @Override
     public Size getPreviewSize() {
-        return null;
+        return mPreviewSize;
     }
 
     @Override
     public void setPreviewSize(Size size) {
-
+        mPreviewSize = size;
+        mPreviewWidth = size.getWidth();
+        mPreviewHeight = size.getHeight();
+        mPreviewScale = mPreviewHeight * 1f / mPreviewWidth;
     }
 
     @Override
     public int getOrientation() {
-        return 0;
+        return mOrientation;
     }
 
     @Override
     public int getDisplayOrientation() {
-        return 0;
+        return mDisplayOrientation;
     }
 
     @Override
@@ -230,7 +233,9 @@ public class CameraManager implements ICameraManager {
 
     @Override
     public void addPreviewBufferCallback(PreviewBufferCallback previewBufferCallback) {
-
+        if (previewBufferCallback != null && !mPreviewBufferCallbacks.contains(previewBufferCallback)) {
+            mPreviewBufferCallbacks.add(previewBufferCallback);
+        }
     }
 
     @Override

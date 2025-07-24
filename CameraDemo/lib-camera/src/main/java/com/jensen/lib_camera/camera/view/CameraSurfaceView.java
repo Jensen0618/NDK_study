@@ -69,10 +69,12 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     private void openCamera() {
         if (mSurfaceHolder == null) {
-            Log.e(TAG, "openCamera: surfaceHolder is null" );
+            Log.e(TAG, "openCamera: surfaceHolder is null");
+            return;
         }
         if (mCameraManager.isOpen()) {
-            Log.w(TAG, "openCamera: Camera is opened!" );
+            Log.w(TAG, "openCamera: Camera is opened!");
+            return;
         }
         mCameraManager.openCamera();
 
@@ -80,7 +82,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.i(TAG, "surfaceChanged: ["+width+", "+height+"]");
+        Log.i(TAG, "surfaceChanged: [" + width + ", " + height + "]");
         mSurfaceWidth = width;
         mSurfaceHeight = height;
     }
@@ -94,6 +96,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Log.d(TAG, "onMeasure: ");
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
@@ -114,20 +117,22 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void onOpen() {
-
+        Log.d(TAG, "onOpen: ");
+        mCameraManager.startPreview(mSurfaceHolder);
     }
 
     @Override
     public void onOpenError(int error, String msg) {
-
+        Log.d(TAG, "onOpenError: ");
     }
 
     @Override
     public void onPreview(int previewWidth, int previewHeight) {
+        Log.d(TAG, "onPreview: [" + previewWidth + "," + previewHeight + "]");
         if (mSurfaceWidth > mSurfaceHeight) {
             setAspectRatio(previewWidth, previewHeight);
         } else {
-            setAspectRatio(previewHeight,previewWidth);
+            setAspectRatio(previewHeight, previewWidth);
         }
     }
 
@@ -156,7 +161,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         closeCamera();
     }
 
-    private void setAspectRatio(int width,int height){
+    private void setAspectRatio(int width, int height) {
         if (width < 0 || height < 0) {
             throw new IllegalArgumentException("Size cannot be negative.");
         }
