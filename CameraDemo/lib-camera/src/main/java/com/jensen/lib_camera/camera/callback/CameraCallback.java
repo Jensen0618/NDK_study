@@ -7,8 +7,8 @@ public interface CameraCallback {
 
     /**
      * 开始预览回调
-     * @param previewWidth
-     * @param previewHeight
+     * @param previewWidth 预览宽度
+     * @param previewHeight 预览高度
      */
     void onPreview(int previewWidth, int previewHeight);
 

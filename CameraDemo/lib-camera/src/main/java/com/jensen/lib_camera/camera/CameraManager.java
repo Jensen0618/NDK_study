@@ -112,6 +112,7 @@ public class CameraManager implements ICameraManager {
             }
             try {
                 mCamera = Camera.open(mCameraId);
+                //打开摄像头之后才能设置摄像头参数
                 Camera.getCameraInfo(mCameraId, mCameraInfo);
                 mCamera.setErrorCallback(mErrorCallback);
                 initCamera();

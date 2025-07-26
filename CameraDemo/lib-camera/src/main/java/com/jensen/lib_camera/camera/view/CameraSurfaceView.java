@@ -22,7 +22,13 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
      */
     private boolean mHasSurface;
     private CameraManager mCameraManager;
+    /**
+     * 相机设置的预览宽度
+     */
     private int mRatioWidth;
+    /**
+     * 相机设置的预览高度
+     */
     private int mRatioHeight;
     private int mSurfaceWidth;
     private int mSurfaceHeight;
@@ -80,6 +86,14 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     }
 
+    /**
+     * surfaceChanged的宽高就是SurfaceView的渲染宽高
+     *
+     * @param holder The SurfaceHolder whose surface has changed.
+     * @param format The new PixelFormat of the surface.
+     * @param width  The new width of the surface.
+     * @param height The new height of the surface.
+     */
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.i(TAG, "surfaceChanged: [" + width + ", " + height + "]");
@@ -96,12 +110,12 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Log.d(TAG, "onMeasure: ");
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
+        Log.d(TAG, "onMeasure: [" + width + "," + height + "]");
         if (0 == mRatioWidth || 0 == mRatioHeight) {
-            setMeasuredDimension(width, height);//
+            setMeasuredDimension(width, height * 4 / 3);//
         } else {
             if (width < height * mRatioWidth / mRatioHeight) {
                 setMeasuredDimension(width, width * mRatioHeight / mRatioWidth);
@@ -129,11 +143,15 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void onPreview(int previewWidth, int previewHeight) {
         Log.d(TAG, "onPreview: [" + previewWidth + "," + previewHeight + "]");
-        if (mSurfaceWidth > mSurfaceHeight) {
-            setAspectRatio(previewWidth, previewHeight);
-        } else {
-            setAspectRatio(previewHeight, previewWidth);
-        }
+//        if (mSurfaceWidth == 0 || mSurfaceHeight == 0) {
+//            return;
+//        }
+//        if (mSurfaceWidth > mSurfaceHeight) {
+//            setAspectRatio(previewWidth, previewHeight);
+//        } else {
+//            setAspectRatio(previewHeight, previewWidth);
+//        }
+        setAspectRatio(previewWidth, previewHeight);
     }
 
     @Override
@@ -162,6 +180,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     }
 
     private void setAspectRatio(int width, int height) {
+        Log.d(TAG, "setAspectRatio: [" + width + "," + height + "]");
         if (width < 0 || height < 0) {
             throw new IllegalArgumentException("Size cannot be negative.");
         }
