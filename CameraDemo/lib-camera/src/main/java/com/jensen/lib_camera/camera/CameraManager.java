@@ -143,7 +143,7 @@ public class CameraManager implements ICameraManager {
 
     @Override
     public void startPreview(SurfaceHolder holder) {
-        Log.i(TAG, "startPreview...");
+        Log.i(TAG, "SurfaceHolder startPreview...");
         if (isPreviewing) {
             return;
         }
@@ -171,7 +171,31 @@ public class CameraManager implements ICameraManager {
 
     @Override
     public void startPreview(SurfaceTexture surfaceTexture) {
+        Log.i(TAG, "SurfaceTexture startPreview...");
+        if (isPreviewing) {
+            return;
+        }
 
+        if (mCamera != null) {
+            try {
+                //设置在哪里显示实时预览；SurfaceHolder对象通常从SurfaceView获取
+//                mCamera.setPreviewDisplay(holder);
+                mCamera.setPreviewTexture(surfaceTexture);
+                if (!mPreviewBufferCallbacks.isEmpty()) {
+                    //分配缓冲区，供相机写入预览帧数据
+                    //缓冲区的大小计算为 mPreviewWidth * mPreviewHeight * 3 / 2。这个计算对于 NV21 格式的图像（这是 Android 相机的默认预览格式）是典型的。在 NV21 格式中，每个像素平均使用 12 位（1.5 字节）（Y 分量每像素使用 1 字节，U/V 分量被二次采样，组合起来每像素使用 0.5 字节）。
+                    mCamera.addCallbackBuffer(new byte[mPreviewWidth * mPreviewHeight * 3 / 2]);
+                    //与addCallbackBuffer结合使用
+                    //当新的预览帧准备好并且有一个可用的缓冲区（ 来自通过 addCallbackBuffer() 添加的那些）时，mPreviewCallback 的 onPreviewFrame(byte[] data, Camera camera) 方法将被调用。data 参数将是包含帧图像数据的字节数组。
+                    //在 onPreviewFrame 中处理完数据后，你必须再次调用 camera.addCallbackBuffer(data) 将该缓冲区返还给相机，以便它可以被重用于未来的帧。 忘记这一步会导致回调停止触发。
+                    mCamera.setPreviewCallbackWithBuffer(mPreviewCallback);
+                }
+                mCamera.startPreview();
+                onPreview(mPreviewWidth, mPreviewHeight);
+            } catch (Exception e) {
+                onPreviewError(CAMERA_ERROR_PREVIEW, e.getMessage());
+            }
+        }
     }
 
     @Override
