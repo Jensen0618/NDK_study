@@ -25,6 +25,7 @@
         <activity android:name=".TextureViewActivity" />
         <activity android:name=".GLSurfaceViewActivity" />
         <activity android:name=".CameraSurfaceViewActivity" />
+        <activity android:name=".CameraActivity" />
     </application>
 
 </manifest>

@@ -1,27 +1,19 @@
 package com.joyu.camerademo;
 
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.jensen.lib_camera.camera.view.CameraSurfaceView;
-
-import java.io.IOException;
+import com.jensen.lib_camera.camera.view.base.BaseSurfaceView;
 
 /**
  * 使用SurfaceView预览Camera数据
  */
 public class CameraSurfaceViewActivity extends AppCompatActivity {
     private static final String TAG = CameraSurfaceViewActivity.class.getSimpleName();
-    CameraSurfaceView surfaceView;
+    BaseSurfaceView surfaceView;
     private SurfaceHolder holder;
     private Camera camera;
     private Camera.Parameters parameters;
