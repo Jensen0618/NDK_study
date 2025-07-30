@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         findViewById(R.id.btn_surface).setOnClickListener(this);
         findViewById(R.id.btn_texture).setOnClickListener(this);
+        findViewById(R.id.btn_glsurface).setOnClickListener(this);
 
     }
 
@@ -42,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_texture:
                 startCameraActivity(R.layout.activity_camera_texture_view);
+                break;
+            case R.id.btn_glsurface:
+                startCameraActivity(R.layout.activity_camera_glsurface_view);
                 break;
         }
     }
