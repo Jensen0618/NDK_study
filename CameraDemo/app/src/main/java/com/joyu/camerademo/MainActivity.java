@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void onSurfaceClick(View view) {
-        startActivity(new Intent(this, SurfaceViewActivity.class));
+        startActivity(new Intent(this, MySurfaceViewActivity.class));
     }
 
     public void onTextureClick(View view) {

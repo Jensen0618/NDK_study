@@ -11,18 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <SurfaceView
+        <com.jensen.lib_camera.camera.view.CameraSurfaceView
             android:id="@+id/mSurface"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <Button
-            android:onClick="onAnimationClick"
-            android:id="@+id/btn_change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="给动画,SurfaceView不支持设置透明度"
-            android:textAllCaps="false" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

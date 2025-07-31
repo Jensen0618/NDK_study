@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SurfaceViewActivity" />
+        <activity android:name=".MySurfaceViewActivity" />
         <activity android:name=".TextureViewActivity" />
         <activity android:name=".GLSurfaceViewActivity" />
         <activity android:name=".CameraSurfaceViewActivity" />
