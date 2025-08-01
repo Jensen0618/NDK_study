@@ -42,6 +42,8 @@ void main(){
 			//point[j * 3 + 1] = gray; //绿色通道
 			//point[j * 3 + 2] = gray; //红色通道
 
+			//提高亮度
+			//saturate_cast<uchar>(1.2*b)，安全转换，使其在uchar的数值范围内
 			point[j * 3 + 0] = saturate_cast<uchar>(1.2*b); //蓝色通道
 			point[j * 3 + 1] = saturate_cast<uchar>(1.2 * g); //绿色通道
 			point[j * 3 + 2] = saturate_cast<uchar>(1.2 * r); //红色通道
