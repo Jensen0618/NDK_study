@@ -19,11 +19,21 @@ public class OpenCVActivity extends AppCompatActivity {
         mIvSrc = findViewById(R.id.iv_src);
         mIvDst = findViewById(R.id.iv_dst);
 
-        mIvSrc.setImageResource(R.mipmap.photo);
+        mIvSrc.setImageResource(R.mipmap.photo2);
 
-        Bitmap src = BitmapFactory.decodeResource(getResources(), R.mipmap.photo);
-        Bitmap dst = BitmapUtil.cvtColor(src);
-        mIvDst.setImageBitmap(dst);
+        //在原bitmap上修改，复用bitmap，需用设置inMutable属性为true
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inMutable = true;
+
+        Bitmap src = BitmapFactory.decodeResource(getResources(), R.mipmap.photo2, opts);
+
+//        Bitmap dst = BitmapUtil.cvtColor(src);//使用ColorMatrix转换
+//        Bitmap dst = BitmapUtil.cvtColorWithPx2(src);//修改像素
+//        mIvDst.setImageBitmap(dst);
+
+
+        BitmapUtil.cvtColorNative(src);
+        mIvDst.setImageBitmap(src);
 
     }
 }
