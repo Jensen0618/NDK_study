@@ -24,6 +24,7 @@ public class OpenCVActivity extends AppCompatActivity {
         //在原bitmap上修改，复用bitmap，需用设置inMutable属性为true
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inMutable = true;
+        opts.inPreferredConfig = Bitmap.Config.RGB_565;
 
         Bitmap src = BitmapFactory.decodeResource(getResources(), R.mipmap.photo2, opts);
 

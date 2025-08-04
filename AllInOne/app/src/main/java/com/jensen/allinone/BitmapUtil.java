@@ -34,6 +34,7 @@ public class BitmapUtil {
 //        ColorMatrix colorMatrix = new ColorMatrix();
 //        colorMatrix.setSaturation(0);//设置饱和度，0为灰度图片
 
+        //矩阵是以R,G,B,A的顺序来写的
         ColorMatrix colorMatrix = new ColorMatrix(new float[]{
                 //底片
 //                -1, 0, 0, 0, 255,
@@ -129,6 +130,7 @@ public class BitmapUtil {
 
     /**
      * C++风格一般不返回对象，而是返回int表示结果
+     *
      * @param src
      * @return
      */
