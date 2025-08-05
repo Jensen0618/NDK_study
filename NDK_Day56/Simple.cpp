@@ -1,4 +1,4 @@
-//Í·ÎÄ¼ş+dll¶¯Ì¬¿â
+ï»¿//å¤´æ–‡ä»¶+dllåŠ¨æ€åº“
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
@@ -6,75 +6,75 @@ using namespace std;
 using namespace cv;
 /*
 void main(){
-	//¶ÁÈ¡Ò»ÕÅÍ¼Æ¬£¬·µ»ØMat¶ÔÏó
-	Mat src = imread("D:/ÕÅÈı.jpg");
+	//è¯»å–ä¸€å¼ å›¾ç‰‡ï¼Œè¿”å›Matå¯¹è±¡
+	Mat src = imread("D:/å¼ ä¸‰.jpg");
 
 	//Mat dst;
 
 	//cvtColor(src, dst, COLOR_BGR2GRAY);
 
 
-	//½«Mat¶ÔÏóĞ´ÈëÎÄ¼ş
+	//å°†Matå¯¹è±¡å†™å…¥æ–‡ä»¶
 	//imwrite("D:/copy.jpg", dst);
 
-	//MatÊÇ¸ö¾ØÕó£¬¾ØÕóÀïÊÇÏñËØ£¬Ã¿¸öÏñËØÓĞn¸öÍ¨µÀ
+	//Matæ˜¯ä¸ªçŸ©é˜µï¼ŒçŸ©é˜µé‡Œæ˜¯åƒç´ ï¼Œæ¯ä¸ªåƒç´ æœ‰nä¸ªé€šé“
 	for (size_t i = 0; i < src.rows; i++)
 	{
-		uchar* point = src.ptr<uchar>(i); //»ñÈ¡µÚiĞĞÏñËØµÄÊ×Ö¸Õë
+		uchar* point = src.ptr<uchar>(i); //è·å–ç¬¬iè¡Œåƒç´ çš„é¦–æŒ‡é’ˆ
 
-		//±éÀúÃ¿¸öÏñËØ
+		//éå†æ¯ä¸ªåƒç´ 
 		for (size_t j = 0; j < src.cols; j++)
 		{
-			//»ñÈ¡Ã¿¸öÏñËØµãµÄBGRÖµ
+			//è·å–æ¯ä¸ªåƒç´ ç‚¹çš„BGRå€¼
 			//Vec3b bgr = src.at<Vec3b>(i, j);
-			//Êä³öÃ¿¸öÏñËØµãµÄBGRÖµ
-			//printf("µÚ%dĞĞ£¬µÚ%dÁĞµÄÏñËØµãµÄBGRÖµÎª£º%d,%d,%d\n", i, j, bgr[0], bgr[1], bgr[2]);
+			//è¾“å‡ºæ¯ä¸ªåƒç´ ç‚¹çš„BGRå€¼
+			//printf("ç¬¬%dè¡Œï¼Œç¬¬%dåˆ—çš„åƒç´ ç‚¹çš„BGRå€¼ä¸ºï¼š%d,%d,%d\n", i, j, bgr[0], bgr[1], bgr[2]);
 
-			//È¡³öÃ¿Ò»¸öÏñËØµãµÄBGRÖµ
-			uchar b = point[j * 3 + 0]; //À¶É«Í¨µÀ
-			uchar g = point[j * 3 + 1]; //ÂÌÉ«Í¨µÀ
-			uchar r = point[j * 3 + 2]; //ºìÉ«Í¨µÀ
+			//å–å‡ºæ¯ä¸€ä¸ªåƒç´ ç‚¹çš„BGRå€¼
+			uchar b = point[j * 3 + 0]; //è“è‰²é€šé“
+			uchar g = point[j * 3 + 1]; //ç»¿è‰²é€šé“
+			uchar r = point[j * 3 + 2]; //çº¢è‰²é€šé“
 
-			//0.11 * r + 0.59 * g + 0.3 * b Õâ¸ö¹«Ê½³öÀ´µÄÒ²ÊÇ»Ò¶ÈÍ¼Æ¬£¬Ï¸½ÚÉÏÓĞ²»Í¬
-			//0.11+0.59+0.3=1£¬¸Ã¹«Ê½µÄ×î´óÖµÎª255£¬ÔÚuchar·¶Î§ÄÚ
-			//uchar gray = 0.11 * b + 0.59 * g + 0.3 * r; //»Ò¶ÈÖµ
+			//0.11 * r + 0.59 * g + 0.3 * b è¿™ä¸ªå…¬å¼å‡ºæ¥çš„ä¹Ÿæ˜¯ç°åº¦å›¾ç‰‡ï¼Œç»†èŠ‚ä¸Šæœ‰ä¸åŒ
+			//0.11+0.59+0.3=1ï¼Œè¯¥å…¬å¼çš„æœ€å¤§å€¼ä¸º255ï¼Œåœ¨ucharèŒƒå›´å†…
+			//uchar gray = 0.11 * b + 0.59 * g + 0.3 * r; //ç°åº¦å€¼
 
-			//point[j * 3 + 0] = gray; //À¶É«Í¨µÀ
-			//point[j * 3 + 1] = gray; //ÂÌÉ«Í¨µÀ
-			//point[j * 3 + 2] = gray; //ºìÉ«Í¨µÀ
+			//point[j * 3 + 0] = gray; //è“è‰²é€šé“
+			//point[j * 3 + 1] = gray; //ç»¿è‰²é€šé“
+			//point[j * 3 + 2] = gray; //çº¢è‰²é€šé“
 
-			//Ìá¸ßÁÁ¶È
-			//saturate_cast<uchar>(1.2*b)£¬°²È«×ª»»£¬Ê¹ÆäÔÚucharµÄÊıÖµ·¶Î§ÄÚ
-			point[j * 3 + 0] = saturate_cast<uchar>(1.2*b); //À¶É«Í¨µÀ
-			point[j * 3 + 1] = saturate_cast<uchar>(1.2 * g); //ÂÌÉ«Í¨µÀ
-			point[j * 3 + 2] = saturate_cast<uchar>(1.2 * r); //ºìÉ«Í¨µÀ
+			//æé«˜äº®åº¦
+			//saturate_cast<uchar>(1.2*b)ï¼Œå®‰å…¨è½¬æ¢ï¼Œä½¿å…¶åœ¨ucharçš„æ•°å€¼èŒƒå›´å†…
+			point[j * 3 + 0] = saturate_cast<uchar>(1.2*b); //è“è‰²é€šé“
+			point[j * 3 + 1] = saturate_cast<uchar>(1.2 * g); //ç»¿è‰²é€šé“
+			point[j * 3 + 2] = saturate_cast<uchar>(1.2 * r); //çº¢è‰²é€šé“
 		}
 
 	}
 
 	imwrite("D:/copy.jpg", src);
 
-	//ÏÔÊ¾Í¼Æ¬
+	//æ˜¾ç¤ºå›¾ç‰‡
 	imshow("test", src);
 
-	//¿í¡¢¸ß¡¢Í¨µÀÊı
-	printf("Í¼Æ¬µÄ¿í¶È£º%d£¬Í¼Æ¬µÄ¸ß¶È£º%d£¬Í¼Æ¬µÄÍ¨µÀÊı£º%d\n", src.cols,src.rows,src.channels());
+	//å®½ã€é«˜ã€é€šé“æ•°
+	printf("å›¾ç‰‡çš„å®½åº¦ï¼š%dï¼Œå›¾ç‰‡çš„é«˜åº¦ï¼š%dï¼Œå›¾ç‰‡çš„é€šé“æ•°ï¼š%d\n", src.cols,src.rows,src.channels());
 
-	//openCVµÄµÈ´ı
+	//openCVçš„ç­‰å¾…
 	waitKey(0);
 }*/
 
 /*void main() {
-	//openCVÖĞµÄÑÕÉ«Ë³ĞòÊÇBGR£¬BGR£¬BGR
-	//Mat¹¹Ôìº¯Êı
+	//openCVä¸­çš„é¢œè‰²é¡ºåºæ˜¯BGRï¼ŒBGRï¼ŒBGR
+	//Matæ„é€ å‡½æ•°
 
-	//rows,cols,type£¬·´Ö±¾õµÄ¸ßÔÚÇ°£¬¿íÔÚºó
+	//rows,cols,typeï¼Œåç›´è§‰çš„é«˜åœ¨å‰ï¼Œå®½åœ¨å
 	//Mat mat(30, 60, CV_8UC1);
 
-	//ÓÃSizeÀ´¾Í±È½ÏºÏÀí£¬¿í¸ß
+	//ç”¨Sizeæ¥å°±æ¯”è¾ƒåˆç†ï¼Œå®½é«˜
 	//Mat mat(Size(10, 20), CV_8UC3, Scalar(255, 0, 0));
 
-	Mat mat = imread("D:/ÕÅÈı2.jpg");
+	Mat mat = imread("D:/å¼ ä¸‰2.jpg");
 
 	if (mat.empty())
 	{
@@ -82,7 +82,7 @@ void main(){
 		getchar();
 		return;
 	}
-	//»òÕß
+	//æˆ–è€…
 	if (!mat.data)
 	{
 		cout << "imread error" << endl;
@@ -91,16 +91,16 @@ void main(){
 	}
 
 
-	//¿½±´¹¹Ôìº¯Êı
+	//æ‹·è´æ„é€ å‡½æ•°
 	Mat copy_mat(mat);
 
-	//³£ÓÃ·½·¨£º
+	//å¸¸ç”¨æ–¹æ³•ï¼š
 	Mat dst;
-	//¸´ÖÆ
+	//å¤åˆ¶
 	//mat.copyTo(dst);
-	//×ª»» Ã»Ğ§¹û°¡£¿
+	//è½¬æ¢ æ²¡æ•ˆæœå•Šï¼Ÿ
 	mat.convertTo(dst, CV_8UC1);
-	//ÕâÒ²ÊÇ¸´ÖÆ
+	//è¿™ä¹Ÿæ˜¯å¤åˆ¶
 	mat.clone();
 
 
@@ -111,17 +111,17 @@ void main(){
 }*/
 
 /*void main() {
-	//¶ÁÈ¡Ò»ÕÅÍ¼Æ¬£¬·µ»ØMat¶ÔÏó
-	Mat src = imread("D:/ÕÅÈı.jpg");
+	//è¯»å–ä¸€å¼ å›¾ç‰‡ï¼Œè¿”å›Matå¯¹è±¡
+	Mat src = imread("D:/å¼ ä¸‰.jpg");
 	int width = src.cols;
 	int height = src.rows;
 	int channels = src.channels();
 	cout << "w:" << width << ", h:" << height << ", channels:" << channels << endl;
 
-	//ĞÂ½¨Ò»¸ö¶ÔÏó£¬½ØÈ¡ÁËÔ­Í¼µÄÒ»°ë£»
-	//¿½±´¹¹Ôìº¯Êı£¬²¢Ã»ÓĞ¸´ÖÆ³öÁíÍâÒ»·İ£¬ÊÇÇ³¿½±´£¬ÔÚÉÏÃæµÄĞŞ¸Ä»áÖ±½Ó·´Ó¦ÔÚÔ­Í¼ÉÏ¡£
+	//æ–°å»ºä¸€ä¸ªå¯¹è±¡ï¼Œæˆªå–äº†åŸå›¾çš„ä¸€åŠï¼›
+	//æ‹·è´æ„é€ å‡½æ•°ï¼Œå¹¶æ²¡æœ‰å¤åˆ¶å‡ºå¦å¤–ä¸€ä»½ï¼Œæ˜¯æµ…æ‹·è´ï¼Œåœ¨ä¸Šé¢çš„ä¿®æ”¹ä¼šç›´æ¥ååº”åœ¨åŸå›¾ä¸Šã€‚
 	Mat temp = src(Rect(0, 0, width / 2, height));
-	//ÕâÊÇ¸´ÖÆ
+	//è¿™æ˜¯å¤åˆ¶
 	Mat dst = temp.clone();
 
 	for (int i = 0; i < dst.rows; i++)
@@ -130,13 +130,13 @@ void main(){
 		{
 			if (channels == 3)
 			{
-				//»ñÈ¡ÏñËØµã£¬at·½·¨£¬3Í¨µÀÊ¹ÓÃVec3b
+				//è·å–åƒç´ ç‚¹ï¼Œatæ–¹æ³•ï¼Œ3é€šé“ä½¿ç”¨Vec3b
 				Vec3b vec = dst.at<Vec3b>(i, j);
 				int b = vec[0];
 				int g = vec[1];
 				int r = vec[2];
 
-				//µ×Æ¬Ğ§¹û
+				//åº•ç‰‡æ•ˆæœ
 				dst.at<Vec3b>(i, j)[0] = 255 - b;
 				dst.at<Vec3b>(i, j)[1] = 255 - g;
 				dst.at<Vec3b>(i, j)[2] = 255 - r;
@@ -152,8 +152,8 @@ void main(){
 }*/
 
 
-void main(){
-	//¶ÁÈ¡Ò»ÕÅÍ¼Æ¬£¬·µ»ØMat¶ÔÏó
+/*void main() {//RGBè½¬å•é€šé“ç°åº¦å›¾
+	//è¯»å–ä¸€å¼ å›¾ç‰‡ï¼Œè¿”å›Matå¯¹è±¡
 	Mat src = imread("D:/sfz.jpg");
 	int width = src.cols;
 	int height = src.rows;
@@ -168,13 +168,13 @@ void main(){
 		{
 			if (channels == 3)
 			{
-				//»ñÈ¡ÏñËØµã£¬at·½·¨£¬3Í¨µÀÊ¹ÓÃVec3b
-				
+				//è·å–åƒç´ ç‚¹ï¼Œatæ–¹æ³•ï¼Œ3é€šé“ä½¿ç”¨Vec3b
+
 				Vec3b vec = src.at<Vec3b>(i, j);
 				uchar b = vec[0];
 				uchar g = vec[1];
 				uchar r = vec[2];
-				
+
 				int gray = 0.11 * b + 0.59 * g + 0.3 * r;
 
 				dst.at<uchar>(i, j) = gray;
@@ -192,4 +192,116 @@ void main(){
 
 	imshow("dst", dst);
 	waitKey(0);
+}*/
+
+/*void main() {//å›¾åƒæ··åˆ
+	Mat src = imread("D:/å¼ ä¸‰.jpg");
+	Mat src2 = imread("D:/sfz_pic.jpg");
+	//åŒºåŸŸæˆªå›¾
+	Mat src1 = src(Rect(0, 0, src2.cols, src2.rows));
+	Mat dst;
+	//add(src, src2,dst);//addæ–¹æ³•è¦æ±‚æ··åˆçš„ä¸¤å¼ å›¾å°ºå¯¸ä¸€è‡´ï¼Œå¦åˆ™æŠ¥é”™ï¼›ç®€å•æ··åˆï¼Œæ— æ³•è°ƒæ•´æƒé‡ã€‚
+
+	// åŠ æƒèåˆå‚æ•°
+	double alpha = 0.7;  // img1 æƒé‡ (70%)
+	double beta = 0.3;   // img2 æƒé‡ (30%)
+	double gamma = -100;   // äº®åº¦è°ƒèŠ‚å€¼
+
+	// æ‰§è¡Œèåˆï¼šdst = img1*alpha + img2*beta + gamma
+	addWeighted(src1, alpha, src2, beta, gamma, dst);
+
+	imshow("æ··åˆ", dst);
+	waitKey(0);
+}*/
+
+//äº®åº¦ã€å¯¹æ¯”åº¦ã€é¥±å’Œåº¦
+/*void main() {
+	//è¯»å–ä¸€å¼ å›¾ç‰‡ï¼Œè¿”å›Matå¯¹è±¡
+	Mat src = imread("D:/å¼ ä¸‰.jpg");
+
+	double alpha = 0.5;
+	double beta = 50;
+
+	for (int i = 0; i < src.rows; i++)
+	{
+		for (int j = 0; j < src.cols; j++)
+		{
+			//è·å–åƒç´ ç‚¹ï¼Œatæ–¹æ³•ï¼Œ3é€šé“ä½¿ç”¨Vec3b
+			Vec3b vec = src.at<Vec3b>(i, j);
+			int b = vec[0];
+			int g = vec[1];
+			int r = vec[2];
+
+			//ä¿®æ”¹äº®åº¦å’Œå¯¹æ¯”åº¦å…¬å¼ï¼šg(x)=Î±f(x)+Î²
+			//éœ€è¦ä½¿ç”¨å®‰å…¨è½¬æ¢ï¼Œå¦åˆ™ä¼šæº¢å‡º
+			src.at<Vec3b>(i, j)[0] = saturate_cast<uchar>(alpha * b + beta);
+			src.at<Vec3b>(i, j)[1] = saturate_cast<uchar>(alpha * g + beta);
+			src.at<Vec3b>(i, j)[2] = saturate_cast<uchar>(alpha * r + beta);
+
+		}
+	}
+
+	imshow("src", src);
+	waitKey(0);
+}*/
+
+/*inline int max(int a, int b) {
+	return a >= b ? a : b;
+}
+
+void main(){
+
+	int result = max(1, 2);
+	cout << "result:" << result << endl;
+
+	getchar();
+
+}*/
+
+void main() {//ç»˜åˆ¶å½¢çŠ¶å’Œæ–‡å­—
+
+	//Mat src = imread("D:/Uï¼å¥¥å°”åŠ ç›ä¸½åˆå§‹.png");
+	//åˆ›å»ºé»‘è‰²ç©ºç”»å¸ƒ
+	Mat src = Mat::zeros(600, 800, CV_8UC3);
+
+	//ç›´çº¿
+	line(src, Point(100, 100), Point(200, 200), Scalar(255, 0, 0), 10, LINE_AA);//AAæ˜æ˜¾æ¯”8è¦åœ†æ¶¦
+
+	//çŸ©å½¢
+	//thicknessï¼šçº¿å®½ >0 æ—¶ç”»è¾¹æ¡†ï¼›è®¾ä¸º -1è¡¨ç¤ºå¡«å……çŸ©å½¢â€‹
+	rectangle(src, Point(50, 100), Point(200, 250), Scalar(0, 255, 255));//ç©ºå¿ƒ
+	rectangle(src, Rect(250, 100, 150, 150), Scalar(0, 255, 0), -1);//å®å¿ƒ
+
+	//åœ†å½¢
+	circle(src, Point(150, 300), 50, Scalar(0, 0, 255), 2, LINE_AA);
+	circle(src, Point(350, 300), 50, Scalar(0, 255, 255), -1);//é»„è‰²å¡«å……
+
+	//æ¤­åœ†
+	ellipse(src, Point(500, 200), Size(150, 80), 30, 0, 360, Scalar(255, 0, 255), 2);
+	ellipse(src, Point(500, 400), Size(100, 50), 0, 0, 180, Scalar(0, 255, 255), -1);
+
+	//å¤šè¾¹å½¢
+	//èŠ±æ‹¬å·ç›´æ¥åˆ›å»ºæ•°ç»„
+	vector<Point> polyPoints = { {100,50},{200,30},{250,100},{150,150},{50,100} };
+	vector<vector<Point>> contours = { polyPoints };
+
+	polylines(src, contours, true, Scalar(0, 255, 0), 2);// ç»˜åˆ¶å¤šè¾¹å½¢è½®å»“ï¼ˆç»¿è‰²è¾¹æ¡†ï¼‰
+	fillPoly(src, contours, Scalar(255, 0, 0));// å¡«å……å¤šè¾¹å½¢ï¼ˆè“è‰²å†…éƒ¨ï¼‰
+
+	//æ–‡å­—
+	putText(src, "Hello OpenCV", Point(400, 400), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 255));
+
+	//éšæœºç”»çº¿
+	RNG rng(time(NULL));//cvçš„éšæœºæ•°
+	for (int i = 0; i < 100; i++)
+	{
+		Point p1(rng.uniform(0, src.cols), rng.uniform(0, src.rows));
+		Point p2(rng.uniform(0, src.cols), rng.uniform(0, src.rows));
+		line(src, p1, p2, Scalar(255, 255, 255));
+	}
+
+
+	imshow("src", src);
+	waitKey(0);
+
 }

@@ -1,2 +1,6 @@
 .vs/
 Debug/
+/AndroidCamera-master
+/CameraDemo/app/src/androidTest/java/com/joyu/camerademo
+*.java
+/MyApplication/.idea
