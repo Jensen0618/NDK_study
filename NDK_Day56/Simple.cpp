@@ -258,7 +258,7 @@ void main(){
 
 }*/
 
-void main() {//绘制形状和文字
+/*void main() {//绘制形状和文字
 
 	//Mat src = imread("D:/U－奥尔加玛丽初始.png");
 	//创建黑色空画布
@@ -304,4 +304,16 @@ void main() {//绘制形状和文字
 	imshow("src", src);
 	waitKey(0);
 
+}*/
+
+void main(){//手动卷积
+	Mat src = imread("D:/U－奥尔加玛丽初始.png");
+	imshow("U－奥尔加玛丽初始", src);
+
+	Mat dst(src.size(), src.type());
+
+
+
+
+	waitKey(0);
 }
