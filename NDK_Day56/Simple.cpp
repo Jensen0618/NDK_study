@@ -306,14 +306,78 @@ void main(){
 
 }*/
 
-void main(){//手动卷积
-	Mat src = imread("D:/U－奥尔加玛丽初始.png");
-	imshow("U－奥尔加玛丽初始", src);
+void main() {//手动卷积
+	Mat src = imread("D:/photo.jpg");
+	imshow("photo", src);
 
 	Mat dst(src.size(), src.type());
+	dst = src.clone();
+
+	int rows = src.rows;
+	int channels = src.channels();
+	int cols = src.cols * channels;
+
+	//经典锐化卷积核
+		/*0 - 1	0
+		- 1	5 - 1
+		0 - 1	0*/
 
 
+		//手动卷积-使用ptr循环遍历每个像素
+	for (size_t i = 1; i < rows - 1; i++)
+	{
+		uchar* prev = src.ptr<uchar>(i - 1); //获取第i行像素的首指针
+		uchar* curr = src.ptr<uchar>(i); //获取第i行像素的首指针
+		uchar* next = src.ptr<uchar>(i + 1); //获取第i+1行像素的首指针
+		uchar* dst_curr = dst.ptr<uchar>(i); //获取dst第i行像素的首指针
+
+		for (size_t j = 1; j < cols - 1; j++)
+		{
+			dst_curr[j] = saturate_cast<uchar>(
+				-1 * prev[j] + //上
+				-1 * curr[j - channels] + //左
+				5 * curr[j] + //中
+				-1 * curr[j + channels] + //右
+				-1 * next[j]); //下
+		}
+
+	}
 
 
+	//这个写法明显不如上面的优雅
+	//for (size_t i = 1; i < rows - 1; i++)
+	//{
+	//	for (size_t j = 1; j < src.cols - 1; j++)
+	//	{
+	//		Vec3b top = src.at<Vec3b>(i - 1, j);
+	//		Vec3b bottom = src.at<Vec3b>(i + 1, j);
+	//		Vec3b center = src.at<Vec3b>(i, j);
+	//		Vec3b left = src.at<Vec3b>(i, j - 1);
+	//		Vec3b right = src.at<Vec3b>(i, j + 1);
+	//		//Vec3b dst_curr = dst.at<Vec3b>(i, j);//不能用这个值去赋值，已经是另一个地址了。
+
+	//		dst.at<Vec3b>(i, j)[0] = saturate_cast<uchar>(
+	//			-1 * top[0] + //上
+	//			-1 * left[0] + //左
+	//			5 * center[0] + //中
+	//			-1 * right[0] + //右
+	//			-1 * bottom[0]); //下
+	//		dst.at<Vec3b>(i, j)[1] = saturate_cast<uchar>(
+	//			-1 * top[1] + //上
+	//			-1 * left[1] + //左
+	//			5 * center[1] + //中
+	//			-1 * right[1] + //右
+	//			-1 * bottom[1]); //下
+	//		dst.at<Vec3b>(i, j)[2] = saturate_cast<uchar>(
+	//			-1 * top[2] + //上
+	//			-1 * left[2] + //左
+	//			5 * center[2] + //中
+	//			-1 * right[2] + //右
+	//			-1 * bottom[2]); //下
+	//	}
+
+	//}
+
+	imshow("卷积结果", dst);
 	waitKey(0);
 }
