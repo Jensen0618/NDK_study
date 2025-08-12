@@ -306,7 +306,8 @@ void main(){
 
 }*/
 
-void main() {//手动卷积
+
+/*void main() {//手动卷积
 	Mat src = imread("D:/photo.jpg");
 	imshow("photo", src);
 
@@ -318,9 +319,9 @@ void main() {//手动卷积
 	int cols = src.cols * channels;
 
 	//经典锐化卷积核
-		/*0 - 1	0
-		- 1	5 - 1
-		0 - 1	0*/
+	//	0 - 1	0
+	//	- 1	5 - 1
+	//	0 - 1	0
 
 
 		//手动卷积-使用ptr循环遍历每个像素
@@ -380,4 +381,163 @@ void main() {//手动卷积
 
 	imshow("卷积结果", dst);
 	waitKey(0);
+}*/
+
+//均值滤波
+/*void main() {
+	Mat src = imread("D:/U－奥尔加玛丽初始.png");
+	if (src.empty())
+	{
+		cout << "opencv read errlr!" << endl;
+		waitKey(0);
+		return;
+	}
+
+	imshow("src", src);
+
+	Mat dst;
+
+	blur(src, dst, Size(3,3));
+
+	imshow("blur 3*3", dst);
+
+	Mat dst2;
+
+	blur(src, dst2, Size(5, 5));
+
+	imshow("blur 5*5", dst2);
+
+	waitKey(0);
+
+
+}*/
+
+/*void main() {//高斯模糊
+	Mat src = imread("D:/U－奥尔加玛丽初始.png");
+	if (src.empty())
+	{
+		cout << "opencv read errlr!" << endl;
+		waitKey(0);
+		return;
+	}
+	imshow("src", src);
+
+	Mat dst;
+	GaussianBlur(src, dst, Size(3, 3),0);
+	imshow("GaussianBlur 3*3", dst);
+
+	Mat dst2;
+	GaussianBlur(src, dst2, Size(3, 3), 10);
+	imshow("GaussianBlur 5*5", dst2);
+
+	waitKey(0);
+}*/
+
+/*void main() {//中值滤波
+	Mat src = imread("D:/jyzs.png");
+	if (src.empty())
+	{
+		cout << "opencv read errlr!" << endl;
+		waitKey(0);
+		return;
+	}
+	imshow("src", src);
+
+	Mat dst;
+	medianBlur(src, dst, 3);
+	imshow("medianBlur 3", dst);
+
+	Mat dst2;
+	medianBlur(src, dst2, 5);
+	imshow("medianBlur 5", dst2);
+
+	waitKey(0);
+}*/
+
+
+int g_d = 15;
+int g_sigmaColor = 20;
+int g_sigmaSpace = 50;
+
+Mat src;
+Mat dst;
+
+/*
+void on_Trackbar(int, void*) {
+	bilateralFilter(src, dst, g_d, g_sigmaColor, g_sigmaSpace);
+	imshow("output", dst);
+}*/
+
+
+/*
+void main() {//双边滤波
+	src = imread("D:/641.webp");
+	if (src.empty())
+	{
+		cout << "opencv read errlr!" << endl;
+		waitKey(0);
+		return;
+	}
+	imshow("src", src);
+
+	bilateralFilter(src, dst, g_d, g_sigmaColor, g_sigmaSpace);
+
+	namedWindow("output");//新建窗口
+
+	createTrackbar("核直径", "output", &g_d, 50, on_Trackbar);
+	createTrackbar("颜色空间方差", "output", &g_sigmaColor, 100, on_Trackbar);
+	createTrackbar("坐标空间方差", "output", &g_sigmaSpace, 100, on_Trackbar);
+
+	imshow("output", dst);
+
+	//Mat dst2;
+	//Mat kernel = (Mat_<int>(3, 3) <<
+		//0, -1, 0,
+		//-1, 5, -1,
+		//0, -1, 0);
+
+	//找补一些模糊
+	//filter2D(src, dst2, src.depth(), kernel);
+	//imshow("锐化", dst2);
+
+	waitKey(0);
+}*/
+
+
+int element_size = 1;
+int max_size = 21;
+
+void on_dilate_trackbar(int pos, void* userdata) {
+	int size = element_size * 2 + 1;
+	//获取自定义核
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(size, size));
+	//膨胀操作
+	dilate(src, dst, kernel);
+	imshow("膨胀后", dst);
+
 }
+
+void main() {//膨胀
+	src = imread("D:/Ndk/black_white.jpeg");
+	if (src.empty())
+	{
+		cout << "opencv read errlr!" << endl;
+		waitKey(0);
+		return;
+	}
+	imshow("src", src);
+
+	namedWindow("膨胀后");//新建窗口
+
+	//获取自定义核
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(element_size, element_size));
+	//膨胀操作
+	dilate(src, dst, kernel);
+	imshow("膨胀后", dst);
+
+	createTrackbar("核直径", "膨胀后", &element_size, 50, on_dilate_trackbar);
+
+
+	waitKey(0);
+}
+

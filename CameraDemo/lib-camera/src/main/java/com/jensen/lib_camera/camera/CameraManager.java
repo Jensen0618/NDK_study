@@ -26,7 +26,7 @@ public class CameraManager implements ICameraManager {
     public static final int CAMERA_ERROR_PREVIEW = -2001;
     Context mContext;
     Camera mCamera;
-    int mCameraId = 0;
+    int mCameraId = 1;
     private Size mPreviewSize;
     private int mPreviewWidth = 640;
     private int mPreviewHeight = 480;
