@@ -517,6 +517,7 @@ void on_dilate_trackbar(int pos, void* userdata) {
 
 }
 
+/*
 void main() {//膨胀
 	src = imread("D:/Ndk/black_white.jpeg");
 	if (src.empty())
@@ -537,7 +538,275 @@ void main() {//膨胀
 
 	createTrackbar("核直径", "膨胀后", &element_size, 50, on_dilate_trackbar);
 
+	waitKey(0);
+}*/
+
+/*
+void on_erode_trackbar(int pos, void* userdata) {
+	int size = element_size * 2 + 1;
+	//获取自定义核
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(size, size));
+	//腐蚀操作
+	erode(src, dst, kernel);
+	imshow("腐蚀后", dst);
+
+}*/
+
+/*
+void main() {//腐蚀
+	src = imread("D:/Ndk/white_black.png");
+	if (src.empty())
+	{
+		cout << "opencv read errlr!" << endl;
+		waitKey(0);
+		return;
+	}
+	imshow("src", src);
+
+	namedWindow("腐蚀后");//新建窗口
+
+	//获取自定义核
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(element_size, element_size));
+	//腐蚀
+	erode(src, dst, kernel);
+	imshow("腐蚀后", dst);
+
+	createTrackbar("核直径", "腐蚀后", &element_size, 50, on_erode_trackbar);
 
 	waitKey(0);
 }
+*/
 
+/*
+* 开运算
+void main() {
+	src = imread("D:/Ndk/white_spot.jpg");
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	//CV_WINDOW_NORMAL：可使用鼠标拖动边缘改变窗口大小
+	namedWindow("src", CV_WINDOW_NORMAL);
+	//设置窗口大小
+	resizeWindow("src", 300, 300);
+	imshow("src", src);
+
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5));
+	morphologyEx(src, dst, CV_MOP_OPEN, kernel);//开运算
+
+	namedWindow("dst", CV_WINDOW_NORMAL);
+	resizeWindow("dst", 300, 300);
+	imshow("dst", dst);
+
+	waitKey(0);
+}
+*/
+/*
+void main() {//闭运算
+	src = imread("D:/Ndk/black_spot.png");
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	//CV_WINDOW_NORMAL：可使用鼠标拖动边缘改变窗口大小
+	namedWindow("src", CV_WINDOW_NORMAL);
+	//设置窗口大小
+	resizeWindow("src", 300, 300);
+	imshow("src", src);
+
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(30,30));
+	morphologyEx(src, dst, CV_MOP_CLOSE, kernel);//闭运算
+
+	namedWindow("dst", CV_WINDOW_NORMAL);
+	resizeWindow("dst", 300, 300);
+	imshow("dst", dst);
+
+	waitKey(0);
+}
+*/
+
+/*
+void main() {//梯度
+	src = imread("D:/Ndk/black_spot.png");
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	//CV_WINDOW_NORMAL：可使用鼠标拖动边缘改变窗口大小
+	namedWindow("src", CV_WINDOW_NORMAL);
+	//设置窗口大小
+	resizeWindow("src", 300, 300);
+	imshow("src", src);
+
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(15, 15));
+	morphologyEx(src, dst, CV_MOP_GRADIENT, kernel);//梯度
+
+	namedWindow("dst", CV_WINDOW_NORMAL);
+	resizeWindow("dst", 300, 300);
+	imshow("dst", dst);
+
+	waitKey(0);
+}*/
+
+/*
+void main() {//顶帽
+	src = imread("D:/Ndk/black_spot.png");
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	//CV_WINDOW_NORMAL：可使用鼠标拖动边缘改变窗口大小
+	namedWindow("src", CV_WINDOW_NORMAL);
+	//设置窗口大小
+	resizeWindow("src", 300, 300);
+	imshow("src", src);
+
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(15, 15));
+
+
+	Mat open;
+	morphologyEx(src, open, CV_MOP_OPEN, kernel);
+	namedWindow("open", CV_WINDOW_NORMAL);
+	resizeWindow("open", 300, 300);
+	imshow("open", open);
+
+
+	morphologyEx(src, dst, CV_MOP_TOPHAT, kernel);//
+
+	namedWindow("dst", CV_WINDOW_NORMAL);
+	resizeWindow("dst", 300, 300);
+	imshow("dst", dst);
+
+	waitKey(0);
+}*/
+
+/*void main() {//黑帽
+	src = imread("D:/Ndk/black_spot.png");
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	//CV_WINDOW_NORMAL：可使用鼠标拖动边缘改变窗口大小
+	namedWindow("src", CV_WINDOW_NORMAL);
+	//设置窗口大小
+	resizeWindow("src", 300, 300);
+	imshow("src", src);
+
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(15, 15));
+
+
+	Mat close;
+	morphologyEx(src, close, CV_MOP_CLOSE, kernel);
+	namedWindow("close", CV_WINDOW_NORMAL);
+	resizeWindow("close", 300, 300);
+	imshow("close", close);
+
+
+	morphologyEx(src, dst, CV_MOP_BLACKHAT, kernel);//
+
+	namedWindow("dst", CV_WINDOW_NORMAL);
+	resizeWindow("dst", 300, 300);
+	imshow("dst", dst);
+
+	waitKey(0);
+}*/
+
+
+/*
+void main() {//验证码去除影响元素
+	src = imread("yzm.png");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	//灰度图
+	Mat gray;
+	cvtColor(src, gray, CV_BGR2GRAY);
+	imshow("gray", gray);
+	imshow("~gray", ~gray);//~取反，gray=255-gray
+
+
+	//二值化
+	Mat binary;
+	adaptiveThreshold(~gray, binary, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 15, 0);
+	imshow("binary", binary);
+
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(7, 7));
+
+	//先腐蚀，去掉干扰
+	erode(binary, dst, kernel);
+
+	//恢复一些轮廓
+	dilate(dst, dst, kernel);
+
+	bitwise_not(dst, dst);//取反，因为上面做二值化的时候用的是取反的灰度图，这里转回去。
+	imshow("dst", dst);
+
+	waitKey(0);
+}*/
+
+/*
+void main() {//找水平或垂直线段
+	src = imread("line.png");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	//灰度图
+	Mat gray;
+	cvtColor(src, gray, CV_BGR2GRAY);
+	imshow("gray", gray);
+	imshow("~gray", ~gray);//~取反，gray=255-gray
+
+
+	//二值化
+	Mat binary;
+	adaptiveThreshold(~gray, binary, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 15, 0);
+	imshow("binary", binary);
+
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(src.cols, 1));//水平
+	//Mat kernel = getStructuringElement(MORPH_RECT, Size(1, src.rows/8));//垂直
+
+	//去掉水平外的线条
+	erode(binary, dst, kernel);
+
+	////恢复一些轮廓
+	dilate(dst, dst, kernel);
+
+	bitwise_not(dst, dst);//取反，因为上面做二值化的时候用的是取反的灰度图，这里转回去。
+	imshow("dst", dst);
+
+	waitKey(0);
+}*/
+
+void main() {//上采样和降采样
+	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	//imshow("src", src);
+
+	//上采样
+	pyrUp(src, dst, Size(src.cols * 2, src.rows * 2));
+	imwrite("U-up.png",dst);
+
+	//降采样
+	pyrDown(src, dst, Size(src.cols / 2, src.rows / 2));
+	imwrite("U-down.png", dst);
+
+
+	waitKey(0);
+}
