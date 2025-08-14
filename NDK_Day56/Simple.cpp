@@ -790,7 +790,7 @@ void main() {//找水平或垂直线段
 	waitKey(0);
 }*/
 
-void main() {//上采样和降采样
+/*void main() {//上采样和降采样
 	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
 	if (src.empty())
 	{
@@ -807,6 +807,63 @@ void main() {//上采样和降采样
 	pyrDown(src, dst, Size(src.cols / 2, src.rows / 2));
 	imwrite("U-down.png", dst);
 
+
+	waitKey(0);
+}*/
+
+
+/*
+void main() {//自定义卷积核实现均值模糊
+	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	int size = 3;
+	//均值模糊
+	Mat dst1;
+	blur(src, dst1, Size(size, size));
+	imshow("blur", dst1);
+
+	//自己写卷积核实现均值模糊
+	Mat dst2;
+	//类型里虽然写了float，但是1/9是整数除法，赋值之前已经是0了。
+	//Mat kernel = (cv::Mat_<float>(size, size) << 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9);
+	//改为浮点数除法即可，这里使用简化写法1.f
+	//Mat kernel = (Mat_<int>(size, size) << 1.f / 9, 1.f / 9, 1.f / 9, 1.f / 9, 1.f / 9, 1.f / 9, 1.f / 9, 1.f / 9, 1.f / 9);
+	//初始化全是1的滤波器核
+	//Mat kernel = Mat::ones(Size(size, size), CV_32F) / (size * size);
+	//使用矩阵的初始化方法
+	//CV_32F表示32位的浮点数
+	Mat kernel(size, size, CV_32F, Scalar(1.f / (size * size)));
+
+	cout << kernel << endl;
+	filter2D(src, dst2, src.depth(), kernel);
+	imshow("filter", dst2);
+
+	waitKey(0);
+}
+*/
+
+
+
+void main() {//二值化
+	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	Mat gray;
+	cvtColor(src, gray, CV_BGR2GRAY);
+
+	threshold(gray, dst, 100, 255, THRESH_TRUNC);
+	imshow("dst", dst);
 
 	waitKey(0);
 }
