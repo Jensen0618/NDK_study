@@ -939,7 +939,7 @@ void main() {//边缘检测-Sobel算子，Scharr算子
 }*/
 
 
-void main() {//边缘检测-laps算子
+void main() {//边缘检测-lpls算子
 	src = imread("D:\\Ndk\\yhk.jpg");//只写文件名，读取当前目录下的文件
 	if (src.empty())
 	{
