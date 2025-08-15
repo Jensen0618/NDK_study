@@ -938,7 +938,7 @@ void main() {//边缘检测-Sobel算子，Scharr算子
 	waitKey(0);
 }*/
 
-
+/*
 void main() {//边缘检测-lpls算子
 	src = imread("D:\\Ndk\\yhk.jpg");//只写文件名，读取当前目录下的文件
 	if (src.empty())
@@ -959,11 +959,37 @@ void main() {//边缘检测-lpls算子
 
 	Mat lpls;
 	Laplacian(gray, lpls, gray.depth(), 5);
-	//使用更高精度需要转为绝对值		
+	//使用更高精度需要转为绝对值
 	//convertScaleAbs(lpls, lpls);
 	imshow("lpls", lpls);
 
 	threshold(lpls, dst, 0, 255, THRESH_BINARY | THRESH_OTSU);
+	imshow("dst", dst);
+
+	waitKey(0);
+}*/
+
+
+
+void main() {//边缘检测-canny
+	src = imread("D:\\Ndk\\yhk.jpg");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	//原理
+	//1. 高斯降噪
+	//2. 转灰度
+	//3. 计算梯度 Sobel/Scharr
+	//4. 非最大信号抑制
+	//5. 高低阈值输出二值图像
+
+	Canny(src, dst, 50, 150);
+
+
 	imshow("dst", dst);
 
 	waitKey(0);
