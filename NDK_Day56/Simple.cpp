@@ -849,7 +849,7 @@ void main() {//自定义卷积核实现均值模糊
 */
 
 
-
+/*
 void main() {//二值化
 	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
 	if (src.empty())
@@ -863,6 +863,107 @@ void main() {//二值化
 	cvtColor(src, gray, CV_BGR2GRAY);
 
 	threshold(gray, dst, 100, 255, THRESH_TRUNC);
+	imshow("dst", dst);
+
+	waitKey(0);
+}*/
+
+/*
+void main() {//边缘检测-Sobel算子，Scharr算子
+	src = imread("D:\\Ndk\\yhk.jpg");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	//先降噪
+	Mat gaussian;
+	GaussianBlur(src, gaussian, Size(3, 3), 0);
+
+	//转灰度图
+	Mat gray;
+	cvtColor(gaussian, gray, CV_BGR2GRAY);
+	imshow("gray", gray);
+
+	//sobel边缘检测
+	Mat mat_x;
+	Mat mat_y;
+
+	//Mat sobel_x = (Mat_<int>(3, 3) << -1, 0, 1, -2, 0, 2, -1, 0, 1);
+	//Mat sobel_y = (Mat_<int>(3, 3) << 1, 2, 1, 0, 0, 0, -1, -2, -1);
+	//filter2D(gray, mat_x, src.depth(), sobel_x);
+	//filter2D(gray, mat_y, src.depth(), sobel_y);
+
+	//自己写算子调滤波效果还是不如opencv已经封装好的方法
+	//depth参数应该使用更高的精度
+	//Sobel(gray, mat_x, CV_32F, 1, 0, 3);
+	//Sobel(gray, mat_y, CV_32F, 0, 1, 3);
+	////使用Sobel方法需要将梯度值转为绝对值
+	//convertScaleAbs(mat_x, mat_x);
+	//convertScaleAbs(mat_y, mat_y);
+
+
+	//Sobel的优化版本，精度更高
+	Scharr(gray, mat_x, CV_64F, 1, 0);
+	Scharr(gray, mat_y, CV_64F, 0, 1);
+	//需要转为绝对值
+	convertScaleAbs(mat_x, mat_x);
+	convertScaleAbs(mat_y, mat_y);
+
+
+	imshow("sobel_x", mat_x);
+	imshow("sobel_y", mat_y);
+
+	//将x、y方向上的边缘合成
+	addWeighted(mat_x, 1, mat_y, 1, 0,dst);
+
+	//手写合成，将像素值相加，效果跟上面差不多
+	//Mat dst(gray.size(), gray.type());
+	//int width = src.cols;
+	//int height = src.rows;
+	//for (int i = 0; i < height; i++)
+	//{
+		//for (int j=0;j<width;j++)
+		//{
+			//int x = mat_x.at<uchar>(i, j);
+			//int y = mat_y.at<uchar>(i, j);
+			//dst.at<uchar>(i, j) = saturate_cast<uchar>(x + y);
+		//}
+	//}
+
+	imshow("dst", dst);
+
+	waitKey(0);
+}*/
+
+
+void main() {//边缘检测-laps算子
+	src = imread("D:\\Ndk\\yhk.jpg");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	//先降噪
+	Mat gaussian;
+	GaussianBlur(src, gaussian, Size(3, 3), 0);
+
+	//转灰度图
+	Mat gray;
+	cvtColor(gaussian, gray, CV_BGR2GRAY);
+	imshow("gray", gray);
+
+	Mat lpls;
+	Laplacian(gray, lpls, gray.depth(), 5);
+	//使用更高精度需要转为绝对值		
+	//convertScaleAbs(lpls, lpls);
+	imshow("lpls", lpls);
+
+	threshold(lpls, dst, 0, 255, THRESH_BINARY | THRESH_OTSU);
 	imshow("dst", dst);
 
 	waitKey(0);
