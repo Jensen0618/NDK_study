@@ -970,7 +970,7 @@ void main() {//边缘检测-lpls算子
 }*/
 
 
-
+/*
 void main() {//边缘检测-canny
 	src = imread("D:\\Ndk\\yhk.jpg");//只写文件名，读取当前目录下的文件
 	if (src.empty())
@@ -980,17 +980,50 @@ void main() {//边缘检测-canny
 	}
 	imshow("src", src);
 
-	//原理
+	//canny方法都做了些什么？
 	//1. 高斯降噪
 	//2. 转灰度
 	//3. 计算梯度 Sobel/Scharr
 	//4. 非最大信号抑制
 	//5. 高低阈值输出二值图像
+	//在threshold1~threshold2之间，取最大值255，否则取0；尽量1:2或1:3；像30~60，30~90，50~100，50~150
+	//L2gradient  true：使用平方相加再开根号的运算，慢一点，精度高；false：使用绝对值相加的方式，快，近似值；
 
 	Canny(src, dst, 50, 150);
-
-
 	imshow("dst", dst);
+
+	waitKey(0);
+}
+*/
+
+void main() {//霍夫曼直线检测
+	src = imread("D:\\Ndk\\yhk.jpg");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	Mat gray;
+	cvtColor(src, gray, CV_BGR2GRAY);
+
+	Mat canny;
+	Canny(src, canny, 50, 150);
+	imshow("canny", canny);
+
+	vector<Vec4f> lines;
+	HoughLinesP(canny, lines, 1, CV_PI / 180, 100, 10, 50);
+
+	for (int i = 0; i < lines.size(); i++)
+	{
+		Vec4f line = lines[i];
+ 		cv::line(src, Point(line[0], line[1]), Point(line[2], line[3]), Scalar(0, 255, 0));
+	}
+
+
+
+	imshow("dst", src);
 
 	waitKey(0);
 }
