@@ -996,8 +996,11 @@ void main() {//边缘检测-canny
 }
 */
 
-void main() {//霍夫曼直线检测
-	src = imread("D:\\Ndk\\yhk.jpg");//只写文件名，读取当前目录下的文件
+
+
+/*
+void main() {//霍夫直线检测
+	src = imread("hough.jpg");//只写文件名，读取当前目录下的文件
 	if (src.empty())
 	{
 		cout << "image read error!" << endl;
@@ -1007,23 +1010,86 @@ void main() {//霍夫曼直线检测
 
 	Mat gray;
 	cvtColor(src, gray, CV_BGR2GRAY);
+	GaussianBlur(gray, gray, Size(5, 5), 0);
 
 	Mat canny;
-	Canny(src, canny, 50, 150);
+	Canny(src, canny, 100, 200);
 	imshow("canny", canny);
 
 	vector<Vec4f> lines;
-	HoughLinesP(canny, lines, 1, CV_PI / 180, 100, 10, 50);
+	HoughLinesP(canny, lines, 1.0, CV_PI / 180, 100, 30, 50);
 
 	for (int i = 0; i < lines.size(); i++)
 	{
 		Vec4f line = lines[i];
- 		cv::line(src, Point(line[0], line[1]), Point(line[2], line[3]), Scalar(0, 255, 0));
+		cv::line(src, Point(line[0], line[1]), Point(line[2], line[3]), Scalar(0, 255, 0));
 	}
 
 
+	imshow("dst", src);
+
+	waitKey(0);
+}
+*/
+
+
+/*
+void main() {//霍夫圆检测
+	src = imread("houghCircle.png");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	Mat gray, blurImg;
+	cvtColor(src, gray, CV_BGR2GRAY);
+	GaussianBlur(gray, blurImg, Size(5, 5), 0);
+
+
+	//圆心，半径，需要3个值
+	vector<Vec3f> circles;
+
+	HoughCircles(blurImg, circles, HOUGH_GRADIENT,1,10,100,50,5,20);
+
+	for (int i=0;i<circles.size();i++)
+	{
+		Vec3f cc = circles[i];
+		circle(src, Point(cc[0], cc[1]), cc[2], Scalar(255, 0, 0));
+	}
+
 
 	imshow("dst", src);
+
+	waitKey(0);
+}*/
+
+
+void main() {//重映射
+	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	//水平翻转
+	Mat map_x, map_y;
+	map_x.create(src.size(), CV_32FC1);
+	map_y.create(src.size(), CV_32FC1);
+	for (int i = 0; i < src.rows; i++)
+	{
+		for (int j = 0; j < src.cols; j++)
+		{
+			map_x.at<float>(i, j) = src.cols - j - 1;//x坐标取反
+			map_y.at<float>(i, j) = i;				 //y坐标不变
+		}
+	}
+	remap(src, dst, map_x, map_y, INTER_LINEAR);
+
+	imshow("dst", dst);
 
 	waitKey(0);
 }
