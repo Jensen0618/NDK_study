@@ -1066,6 +1066,7 @@ void main() {//霍夫圆检测
 }*/
 
 
+/*
 void main() {//重映射
 	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
 	if (src.empty())
@@ -1089,6 +1090,37 @@ void main() {//重映射
 	}
 	remap(src, dst, map_x, map_y, INTER_LINEAR);
 
+	imshow("dst", dst);
+
+	waitKey(0);
+}*/
+
+
+void main() {//直方图均衡化
+	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	/*Mat gray;
+	cvtColor(src, gray, CV_BGR2GRAY);
+	imshow("gray", gray);
+
+	equalizeHist(gray, dst);
+	imshow("dst", dst);*/
+
+	//彩色图像需转换到YCrCb空间，仅均衡化亮度通道(Y)
+	Mat ycrcb;
+	cvtColor(src, ycrcb, CV_BGR2YCrCb);
+
+	vector<Mat> channels;
+	split(ycrcb, channels);//将通道分离
+	equalizeHist(channels[0], channels[0]);//均衡化Y通道
+	merge(channels, ycrcb);
+	cvtColor(ycrcb, dst,CV_YCrCb2BGR);
 	imshow("dst", dst);
 
 	waitKey(0);
