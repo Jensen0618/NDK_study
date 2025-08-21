@@ -1096,6 +1096,7 @@ void main() {//重映射
 }*/
 
 
+/*
 void main() {//直方图均衡化
 	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
 	if (src.empty())
@@ -1105,12 +1106,13 @@ void main() {//直方图均衡化
 	}
 	imshow("src", src);
 
-	/*Mat gray;
+	//单通道直接上手
+	Mat gray;
 	cvtColor(src, gray, CV_BGR2GRAY);
 	imshow("gray", gray);
 
 	equalizeHist(gray, dst);
-	imshow("dst", dst);*/
+	imshow("dst", dst);
 
 	//彩色图像需转换到YCrCb空间，仅均衡化亮度通道(Y)
 	Mat ycrcb;
@@ -1119,9 +1121,101 @@ void main() {//直方图均衡化
 	vector<Mat> channels;
 	split(ycrcb, channels);//将通道分离
 	equalizeHist(channels[0], channels[0]);//均衡化Y通道
-	merge(channels, ycrcb);
-	cvtColor(ycrcb, dst,CV_YCrCb2BGR);
+	merge(channels, ycrcb);//将均衡化后的数据合并回图像
+	cvtColor(ycrcb, dst,CV_YCrCb2BGR);//转为显示用的BGR图像
 	imshow("dst", dst);
 
+	waitKey(0);
+}*/
+
+
+void main() {//直方图均衡化
+	src = imread("U－奥尔加玛丽初始.png");//只写文件名，读取当前目录下的文件
+	if (src.empty())
+	{
+		cout << "image read error!" << endl;
+		waitKey(0);
+	}
+	imshow("src", src);
+
+	//1. 分离BGR通道
+	vector<Mat> bgr;
+	split(src, bgr);
+
+	//显示出来的是三张灰度图
+	//分离后每个通道变成了独立的单通道矩阵（每个像素只有一个值，表示该通道的亮度）
+	//imshow遵循单通道矩阵→显示为灰度图，三通道矩阵→显示为彩色图
+	//显示每个通道的真实颜色，需要使用三通道图（其余通道的值为0）
+	//imshow("blue", bgr[0]);
+	//imshow("green", bgr[1]);
+	//imshow("red", bgr[2]);
+
+	//2. 设置直方图参数
+	int histSize = 256;          // 直方图bin数量，值（0-255）共256个数
+	float range[] = { 0, 256 };    // 像素值范围，左闭右开，不含256
+	const float* histRange = { range };//​​指针数组​​ histRange，其唯一元素指向 range数组的首地址
+	bool uniform = true, accumulate = false;
+	Mat b_hist, g_hist, r_hist;
+
+	//3. 计算各通道直方图
+	//const Mat* images, 一个图像矩阵，指针
+	// int nimages,	图像数量，通常为1
+	//const int* channels, 通道索引数组
+	// InputArray mask,	掩膜（指定统计区域），Mat()表示都统计
+	//OutputArray hist, 输出
+	// int dims,	直方图维度（1 表示一维直方图，2 表示二维联合直方图）
+	// const int* histSize,	每个维度的 bin 数量
+	//const float** ranges, 统计的像素值值范围
+	// bool uniform = true,		true时自动均匀分 bin；false需手动指定每个 bin 的边界
+	// bool accumulate = false	true时保留上次计算结果（用于多图累积统计）
+	calcHist(&bgr[0], 1, 0, Mat(), b_hist, 1, &histSize, &histRange, uniform, accumulate);
+	calcHist(&bgr[1], 1, 0, Mat(), g_hist, 1, &histSize, &histRange, uniform, accumulate);
+	calcHist(&bgr[2], 1, 0, Mat(), r_hist, 1, &histSize, &histRange, uniform, accumulate);
+
+	//创建直方图画布
+	int hist_w = 512, hist_h = 300;//宽度设为256的2倍，高度随意
+	//cvRound	将浮点数四舍五入到最接近的整数
+	int bin_w = cvRound((double)hist_w / histSize);//计算每个bin的宽度
+	Mat histImage(Size(hist_w, hist_h), CV_8UC3, Scalar(0, 0, 0));//黑色背景
+
+	//归一化直方图数据到画布高度
+
+	//InputArray      src,        // 输入矩阵（图像/数据）
+	//OutputArray     dst,        // 输出矩阵
+	//double          alpha = 1,  // 目标范围下限 或 范数缩放值
+	//double          beta = 0,  // 目标范围上限（仅限 NORM_MINMAX）
+	//int             norm_type = NORM_L2,  // 归一化类型
+	//int             dtype = -1, // 输出数据类型（-1 表示与输入一致）
+	//InputArray      mask = noArray()  // 掩码（可选）
+
+	normalize(b_hist, b_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+	normalize(g_hist, g_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+	normalize(r_hist, r_hist, 0, histImage.rows, NORM_MINMAX, -1, Mat());
+
+	//绘制三通道直方图（折线图形式）
+	for (int i = 1; i < histSize; i++)
+	{
+		//i从1开始，保证不会越界
+		// 起点
+		// x坐标： bin_w * (i - 1) 
+		// y坐标：hist_h - cvRound(b_hist.at<float>(i - 1)) openCV坐标原点在左上角，需要处理下
+		//蓝色
+		line(histImage,
+			Point(bin_w * (i - 1), hist_h - cvRound(b_hist.at<float>(i - 1))),
+			Point(bin_w * i, hist_h - cvRound(b_hist.at<float>(i))),
+			Scalar(255, 0, 0), 2);
+
+		//绿色
+		line(histImage,
+			Point(bin_w * (i - 1), hist_h - cvRound(g_hist.at<float>(i - 1))),
+			Point(bin_w * i, hist_h - cvRound(g_hist.at<float>(i))), Scalar(0, 255, 0), 2);
+
+		//红色
+		line(histImage,
+			Point(bin_w * (i - 1), hist_h - cvRound(r_hist.at<float>(i - 1))),
+			Point(bin_w * i, hist_h - cvRound(r_hist.at<float>(i))), Scalar(0, 0, 255), 2);
+	}
+
+	imshow("hist", histImage);
 	waitKey(0);
 }
