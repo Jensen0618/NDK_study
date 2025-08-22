@@ -1198,7 +1198,7 @@ void main() {//直方图均衡化
 		//i从1开始，保证不会越界
 		// 起点
 		// x坐标： bin_w * (i - 1) 
-		// y坐标：hist_h - cvRound(b_hist.at<float>(i - 1)) openCV坐标原点在左上角，需要处理下
+		// y坐标：hist_h - cvRound(b_hist.at<float>(i - 1)) openCV坐标原点在左上角，直方图需要从左下角开始画，需要处理下
 		//蓝色
 		line(histImage,
 			Point(bin_w * (i - 1), hist_h - cvRound(b_hist.at<float>(i - 1))),
