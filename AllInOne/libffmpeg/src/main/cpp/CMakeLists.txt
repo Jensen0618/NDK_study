@@ -12,6 +12,49 @@ cmake_minimum_required(VERSION 3.22.1)
 # build script scope).
 project("main")
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+
+set(jnilibs ${CMAKE_SOURCE_DIR}/../jniLibs)
+set(libname learn-ffmpeg)
+
+include_directories(
+        include
+        ${CMAKE_SOURCE_DIR}/util
+)
+
+link_directories(
+        ${jnilibs}/${ANDROID_ABI}
+)
+
+file(GLOB src-files
+        ${CMAKE_SOURCE_DIR}/8.cpp)
+
+add_library(
+        ${libname}
+
+        SHARED
+
+        ${src-files}
+)
+
+set(third-party-libs
+        avformat
+        avcodec
+        avfilter
+        swresample
+        swscale
+        avutil
+)
+
+set(native-libs
+        android
+        EGL
+        GLESv3
+        OpenSLES
+        log
+)
+
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -26,13 +69,13 @@ project("main")
 # for GameActivity/NativeActivity derived applications, the same library name must be
 # used in the AndroidManifest.xml file.
 add_library(${CMAKE_PROJECT_NAME} SHARED
-    # List C/C++ source files with relative paths to this CMakeLists.txt.
-    main.cpp)
+        # List C/C++ source files with relative paths to this CMakeLists.txt.
+        main.cpp)
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
 # build script, prebuilt third-party libraries, or Android system libraries.
 target_link_libraries(${CMAKE_PROJECT_NAME}
-    # List libraries link to the target library
-    android
-    log)
+        # List libraries link to the target library
+        android
+        log)
