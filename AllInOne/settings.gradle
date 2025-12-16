@@ -1,3 +1,5 @@
 rootProject.name = "AllInOne"
 include ':app'
 include ':LibVideo'
+include ':libOpenCV'
+include ':libffmpeg'
